@@ -1,26 +1,45 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-
-const routes: Array<RouteRecordRaw> = [
-  {
-    path: "/",
-    name: "home",
-    component: HomeView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
-  },
-];
+import { createRouter, createWebHistory } from 'vue-router'
+import dashBoard from '../views/public/dashBoard.vue'
+import originalImage from '../views/public/originalImage.vue'
+import carriageInformation from '../views/public/carriageInformation.vue'
+import componentInformation from '../views/public/componentInformation.vue'
+import personalInformation from '../views/public/personalInformation.vue'
+import templateLibrary from '../views/public/templateLibrary.vue'
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-});
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'dashBoard',
+      component: dashBoard
+    },
+    {
+      path: '/orgImage',
+      name: 'orgImage',
+      component: originalImage
+    },
+    {
+      path: '/carriageInfo',
+      name: 'carriageInfo',
+      component: carriageInformation
+    },
+    {
+      path: '/compoInfo',
+      name: 'compoInfo',
+      component: componentInformation
+    },
+    // {
+    //   path: '/templateLib',
+    //   name: 'templateLib',
+    //   component: templateLibrary
+    // },
+    {
+      path: '/personalInfo',
+      name: 'personalInfo',
+      component: personalInformation
+    }
+  ]
+})
 
-export default router;
+export default router

@@ -1,0 +1,72 @@
+//@use 'src/styles/palette';
+
+// 外边缘设置为0
+#app{
+  height: 100%;
+  width: 100%;
+}
+body,html{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+.el-container{
+  height: 100%;
+}
+.--tv-main-frame .el-menu {
+  border-right: none;
+}
+.--tv-main-frame .el-main {
+  padding: 0;
+}
+.--tv-main-frame .toolbar {
+  background-color: rgb(40, 80, 117);
+  color: rgb(255, 255, 255);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  right: 20px;
+}
+.--tv-main-toolbar{
+  background-color: rgb(40, 80, 117);
+  box-shadow: 0 0 10px 3px #999;
+}
+.--tv-main-dark{
+  background-color: rgb(0, 21, 41);
+  color: rgb(255, 255, 255);
+  border: 0;
+  --el-menu-text-color: rgb(255, 255, 255);
+  --el-menu-hover-bg-color: rgb(0, 41, 61);
+}
+.--tv-main-dark .el-card__body{
+  margin: 20px;
+  padding: 0;
+  align-items: center;
+}
+.--tv-main-dark .el-card__body .b{
+  align-items: center;
+}
+.--tv-main-dark .el-card__body .img{
+  align-items: center;
+}
+.--tv-main-dark-aside{
+  background-color: rgb(0, 21, 41);
+  box-shadow: 0 0 10px 3px #999
+}
+.--tv-page-frame .el-aside{
+  text-align: center;
+  margin: 10px;
+  max-width: 200px;
+}
+.--tv-page-table{
+  height: 90%;
+  text-align: center;
+  margin-top: 30px;
+}
+.--tv-page-table-select{
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
