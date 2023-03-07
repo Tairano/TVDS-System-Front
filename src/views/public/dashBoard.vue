@@ -72,12 +72,12 @@
             </tr>
             </thead>
             <tbody>
-<!--            <tr v-for="(m,index) in missionStats">-->
-<!--              <td style="color: #00f9fd;">{{ missionStatusConverter(m.status) }}</td>-->
-<!--              <td style="color:#face49">{{ m.inspection }}号</td>-->
-<!--              <td style="color: #face49">{{ m.carriageNo }}车</td>-->
-<!--              <td style="color: #face49">{{ m.type }}</td>-->
-<!--            </tr>-->
+            <tr v-for="(m,index) in missionStats">
+              <td style="color: #00f9fd;">{{ missionStatusConverter(m.status) }}</td>
+              <td style="color:#face49">{{ m.inspection }}号</td>
+              <td style="color: #face49">{{ m.carriageNo }}车</td>
+              <td style="color: #face49">{{ m.type }}</td>
+            </tr>
             </tbody>
           </table>
         </div>

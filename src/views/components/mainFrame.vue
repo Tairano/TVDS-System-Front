@@ -88,6 +88,7 @@ function handleCommand(command: string){
       type: 'success',
       message: '您已退出账号'
     })
+    window.location.reload()
   }
   else router.push(command)
 }

@@ -3,10 +3,8 @@
              :close-on-click-modal="false"
              :close-on-press-escape="false"
              :show-close="false">
-    <div class="bg-login">
-      <!--logo-->
-<!--      <el-image :src="'@/assets/logo.png'" class="logo"/>-->
-      <!--标题-->
+    <div class="bg-login" style="text-align: center">
+      <img src="src/assets/images/locomotive.png" style="width: 200px"/>
       <el-row type="flex" class="row-bg row-two" justify="center" align="middle">
         <el-col :span="6"></el-col>
         <el-col :span="10">
@@ -94,13 +92,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           // 表单验证成功
-          console.log(this.loginForm)
           login(this.loginForm.username,this.loginForm.password).then(
               response=> {
-                if(response.code === 1){
+                if(response === undefined){
                   ElMessage({
                     type: 'error',
-                    message: response.message
+                    message: '账户或者密码错误，请重新输入！'
                   })
                 }
                 else{
@@ -160,11 +157,10 @@ export default {
 }
 
 .title {
-  text-shadow: -3px 3px 1px #5f565e;
+  text-shadow: -3px 3px 1px #ffffff;
   text-align: center;
-  margin-top: 60%;
-  color: #41b9a6;
-  font-size: 40px;
+  color: #000000;
+  font-size: 30px;
 }
 
 .login-card {

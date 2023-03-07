@@ -39,6 +39,7 @@
           <el-table-column prop="status" label="状态" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,0)">未检测</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,3)">检测中</el-button>
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="success" plain v-show="buttonReload(scope.row.status,1)">正常</el-button>
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="danger" plain v-show="buttonReload(scope.row.status,2)">异常</el-button>
             </template>
@@ -55,8 +56,8 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="null" type="primary" v-show="buttonReload(scope.row.status,0)">检测</el-button>
-              <el-button @click="null" type="primary" plain disabled v-show="!buttonReload(scope.row.status,0)">检测</el-button>
+              <el-button @click="scope.row.status = 3;detect(scope.row)" type="primary" v-show="buttonReload(scope.row.status,0)">检测</el-button>
+              <el-button type="primary" plain disabled v-show="buttonReload(scope.row.status,3)">检测中</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -86,6 +87,7 @@ import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {juniorAddress as ja} from "@/tool/HostAddress";
 import ImageInformation from "@/views/components/imageInformation.vue";
+import {ElMessage} from "element-plus";
 export default {
   name: "compoInfo",
   components: {ImageInformation},
@@ -193,10 +195,20 @@ export default {
       this.dialog= true
     },
     // 检测
-    detect(dbId){
-      execCom('detect/',dbId).then(
+    detect(row){
+      execCom('defect',row.dbId).then(
           response=>{
-            return response.status
+            const newData = response.data
+            for(var i in this.tableData){
+              if(this.tableData[i].dbId === newData.dbId){
+                this.tableData[i] = newData
+                break
+              }
+            }
+            ElMessage({
+              type: 'success',
+              message: response.message
+            })
           }
       )
     },

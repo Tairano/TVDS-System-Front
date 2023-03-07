@@ -36,7 +36,7 @@
           <el-table-column prop="carriageNumber" label="车厢号" align="center"/>
           <el-table-column label="查看图片图" align="center">
             <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
+              <el-button @click="viewImage(scope.row.localUrl,scope.row)">查看大图</el-button>
             </template>
           </el-table-column>
         </el-table>

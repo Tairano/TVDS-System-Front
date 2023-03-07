@@ -50,10 +50,16 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
   const token = sessionStorage.getItem('token')
-  if (!token && to.name !== 'loginPage'){
-    return { name: 'loginPage' }
+  if(token){
+    if(to.name === 'loginPage')
+      next('/')
+    else next()
   }
-  else next()
+  else{
+    if(to.name !== 'loginPage')
+      next('loginPage')
+    else next()
+  }
 })
 
 export default router
