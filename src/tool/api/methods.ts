@@ -31,7 +31,17 @@ export const execCom = (ja: string, cmd: string)=> {
 }
 
 // 获取模板
-export const getTmp = ()=>{
-    console.log(sendUrl(sa.image, _ja.templateLib))
+export const getTmp = ()=> {
     return postRequest(sendUrl(sa.image, _ja.templateLib), null)
+}
+
+// 登录
+export const login = (userName: string, password: string)=> {
+    return postRequest(sendUrl(sa.user, _ja.login) +
+        userName + '&password=' + password, null)
+}
+
+// 登出
+export const logOut = ()=> {
+    return postRequest(sendUrl(sa.user, _ja.logOut), null)
 }

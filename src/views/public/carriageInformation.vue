@@ -5,7 +5,7 @@
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card>
+      <el-card style="height: 87%; margin: 17px 0 0 0">
         <el-tree
             :data="treeData"
             show-checkbox
@@ -32,23 +32,23 @@
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
       </el-header>
       <el-main>
-        <el-table :data="tableData" border stripe style="width: 100%">
-          <el-table-column prop="inspectionSeq" label="过检号"/>
-          <el-table-column prop="carriageId" label="车厢ID"/>
-          <el-table-column prop="id" label="图片ID"/>
-          <el-table-column label="详略图">
+        <el-table :data="tableData" border stripe style="width: 98%;height: 100%">
+          <el-table-column prop="inspectionSeq" label="过检号" align="center"/>
+          <el-table-column prop="carriageId" label="车厢ID" align="center"/>
+          <el-table-column prop="id" label="图片ID" width="200%" align="center"/>
+          <el-table-column label="详略图" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.url,scope.row)">查看大图</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="配准图">
+          <el-table-column label="配准图" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.alignedUrl,scope.row)" :disabled="scope.row.status < 2">查看大图</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="carriageNo" label="车厢号"/>
-          <el-table-column prop="model" label="型号"/>
-          <el-table-column fixed="right" label="操作">
+          <el-table-column prop="carriageNo" label="车厢号" align="center"/>
+          <el-table-column prop="model" label="型号" align="center"/>
+          <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
               <el-button @click="ocr(scope.row);scope.row.status = 4" type="primary" v-show="buttonReload(scope.row.status,0)">识别</el-button>
               <el-button type="primary" v-show="buttonReload(scope.row.status,4)" plain disabled>识别中</el-button>

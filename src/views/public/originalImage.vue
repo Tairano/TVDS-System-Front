@@ -5,7 +5,7 @@
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card>
+      <el-card style="height: 87%; margin: 17px 0 0 0">
         <el-tree
             :data="treeData"
             show-checkbox
@@ -24,17 +24,17 @@
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
       </el-header>
       <el-main>
-        <el-table :data="tableData" border stripe style="width: 100%">
-          <el-table-column label="图片ID">
+        <el-table :data="tableData" border stripe style="width: 98%;height: 100%">
+          <el-table-column label="图片ID" width="200%" align="center">
             <template v-slot="scope">
               {{scope.row.createTime.split('T')[0] + '-' + scope.row.inspectionSeqDay + '-' +scope.row.id}}
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="过检日期"/>
-          <el-table-column prop="inspectionSeqDay" label="过检号"/>
-          <el-table-column prop="cameraNumber" label="机位"/>
-          <el-table-column prop="carriageNumber" label="车厢号"/>
-          <el-table-column label="查看图片图">
+          <el-table-column prop="createTime" label="过检日期" width="200%" align="center"/>
+          <el-table-column prop="inspectionSeqDay" label="过检号" width="200%" align="center"/>
+          <el-table-column prop="cameraNumber" label="机位" align="center"/>
+          <el-table-column prop="carriageNumber" label="车厢号" align="center"/>
+          <el-table-column label="查看图片图" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
             </template>

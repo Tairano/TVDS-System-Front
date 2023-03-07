@@ -10,6 +10,7 @@ export const seniorAddress = {
     execute : 'vision',
     flow : 'flow',
     image : 'blob',
+    user : 'user'
 }
 
 
@@ -22,5 +23,7 @@ export const juniorAddress = {
     templateLib : 'template',
     personalInfo : 'origin',
     getImage : 'get?path=',
-    downloadImage : 'download?path='
+    downloadImage : 'download?path=',
+    login : 'login?username=',
+    logOut : ''
 }

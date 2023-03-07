@@ -4,10 +4,14 @@
       <el-menu class="--tv-main-dark"  @select="handleSelect">
         <el-card class="--tv-main-dark">
           <template #default>
-            <img src="src/assets/logo.png" style="height: 30px">
-            <b style="height: 30px">
-              TVDS异常检测系统
-            </b>
+            <div style="display: flex">
+              <img src="src/assets/logo.png" style="height: 20px">
+              <div>
+                <b>
+                  TVDS异常检测系统
+                </b>
+              </div>
+            </div>
           </template>
         </el-card>
         <el-menu-item-group style="vertical-align: middle; height: 100%">
@@ -51,7 +55,6 @@
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="/">主页</el-dropdown-item>
-                <el-dropdown-item command="personalInfo">个人信息</el-dropdown-item>
                 <el-dropdown-item command="logOut">登出</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -70,6 +73,7 @@
 <script lang="ts" setup>
 import { useRouter} from 'vue-router'
 import { Setting } from '@element-plus/icons-vue'
+import {ElMessage} from "element-plus";
 
 const router = useRouter()
 // 侧边菜单触发事件
@@ -79,7 +83,11 @@ function handleSelect(index : string){
 // 顶部下拉菜单触发事件
 function handleCommand(command: string){
   if(command === 'logOut'){
-    alert('Log outed!')
+    sessionStorage.removeItem('token')
+    ElMessage({
+      type: 'success',
+      message: '您已退出账号'
+    })
   }
   else router.push(command)
 }

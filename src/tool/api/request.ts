@@ -1,8 +1,26 @@
 import axios from "axios"
 
+axios.defaults.withCredentials = true
+
+export const axiosInstance = axios.create({
+    withCredentials: true,
+})
+
+// request 监听器
+axiosInstance.interceptors.request.use((config) => {
+    const token = sessionStorage.getItem('token')
+    // 如果 token 存在
+    // 让每个请求头携带自定义 token
+    if (token) {
+        // @ts-ignore
+        config.headers.Authorization = token
+    }
+    return config
+})
+
 export const postRequest = (url: string, data: any)=> {
     if(data == null){
-        return axios.post(url).then(
+        return axiosInstance.post(url).then(
             response =>{
                 return response.data.data
             }
@@ -13,7 +31,7 @@ export const postRequest = (url: string, data: any)=> {
         )
     }
     else{
-        return axios.post(url, data).then(
+        return axiosInstance.post(url, data).then(
             response =>{
                 return response.data.data
             }
@@ -26,7 +44,7 @@ export const postRequest = (url: string, data: any)=> {
 }
 
 export const getRequest = (url: string)=> {
-    return axios.get(url).then(
+    return axiosInstance.get(url).then(
         response =>{
             return response.data
         }

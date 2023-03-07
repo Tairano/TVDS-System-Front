@@ -5,6 +5,7 @@ import carriageInformation from '../views/public/carriageInformation.vue'
 import componentInformation from '../views/public/componentInformation.vue'
 import personalInformation from '../views/public/personalInformation.vue'
 import templateLibrary from '../views/public/templateLibrary.vue'
+import LoginPage from '../views/components/loginPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,8 +39,21 @@ const router = createRouter({
       path: '/personalInfo',
       name: 'personalInfo',
       component: personalInformation
+    },
+    {
+      path: '/loginPage',
+      name: 'loginPage',
+      component: LoginPage
     }
   ]
+})
+
+router.beforeEach(async (to, from,next) => {
+  const token = sessionStorage.getItem('token')
+  if (!token && to.name !== 'loginPage'){
+    return { name: 'loginPage' }
+  }
+  else next()
 })
 
 export default router

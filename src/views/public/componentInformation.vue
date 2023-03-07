@@ -5,7 +5,7 @@
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card>
+      <el-card style="height: 87%; margin: 17px 0 0 0">
         <el-tree
             :data="treeData"
             show-checkbox
@@ -31,29 +31,29 @@
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
       </el-header>
       <el-main>
-        <el-table :data="tableData" border stripe style="width: 100%">
-          <el-table-column prop="id" label="图片ID"/>
-          <el-table-column prop="inspectionSeq" label="过检号"/>
-          <el-table-column prop="cameraNo" label="机位"/>
-          <el-table-column prop="carriageNo" label="车厢号"/>
-          <el-table-column prop="status" label="状态">
+        <el-table :data="tableData" border stripe style="width: 98%;height: 100%">
+          <el-table-column prop="id" label="图片ID" width="200%" align="center"/>
+          <el-table-column prop="inspectionSeq" label="过检号" align="center"/>
+          <el-table-column prop="cameraNo" label="机位" align="center"/>
+          <el-table-column prop="carriageNo" label="车厢号" align="center"/>
+          <el-table-column prop="status" label="状态" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,0)">未检测</el-button>
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="success" plain v-show="buttonReload(scope.row.status,1)">正常</el-button>
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="danger" plain v-show="buttonReload(scope.row.status,2)">异常</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="类型">
+          <el-table-column label="类型" align="center">
             <template v-slot="scope">
               {{toChinese(scope.row.partName)}}
             </template>
           </el-table-column>>
-          <el-table-column label="详略图">
+          <el-table-column label="详略图" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作">
+          <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
               <el-button @click="null" type="primary" v-show="buttonReload(scope.row.status,0)">检测</el-button>
               <el-button @click="null" type="primary" plain disabled v-show="!buttonReload(scope.row.status,0)">检测</el-button>
