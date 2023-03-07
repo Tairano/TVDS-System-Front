@@ -1,24 +1,33 @@
-# tvds-system-front
+# TVDS-System-Front
 
-## Project setup
-```
+### 项目安装
+
+```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+### 启动
+
+```sh
+npm run dev
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+### 修改配置
+
+> 主机地址和端口位置在： ‘/src/tool/HostAddress.ts’
+
+```ts
+// 主机地址
+const HostIP = '10.0.0.100'		// 这里是主机地址
+const HostPort = '8080'			// 这里是主机端口
+export const HostAddress = HostIP + ':' + HostPort
+
 ```
 
-### Lints and fixes files
-```
-npm run lint
+登录账号密码
+
+```js
+account:xxx
+password:000000
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
