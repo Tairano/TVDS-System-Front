@@ -1,4 +1,4 @@
-import axios from "axios";
+import {axiosInstance as axios} from "@/tool/api/request";
 import {HostAddress} from "@/tool/HostAddress";
 
 export function carriageStats() {

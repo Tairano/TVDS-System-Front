@@ -24,4 +24,10 @@ export const HostAddress = HostIP + ':' + HostPort
 
 ```
 
-> 
+登录账号密码
+
+```js
+account:xxx
+password:000000
+```
+
