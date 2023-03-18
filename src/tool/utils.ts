@@ -1,5 +1,6 @@
 // 获取页码
-const PAGE_SIZE = 10
+import {PAGE_SIZE} from "@/configs/settings";
+
 export function sendPage(x: string){
     return '/' + x + '/' + PAGE_SIZE
 }

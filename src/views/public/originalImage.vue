@@ -64,8 +64,10 @@
 <script>
 import {getPage, getTree} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
-import {juniorAddress as ja} from "@/tool/HostAddress";
+import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import ImageInformation from "@/views/components/imageInformation.vue";
+const address = ja.orgImage;
+
 export default {
   name: "orgImage",
   components: {ImageInformation},
@@ -105,7 +107,7 @@ export default {
      */
     // 预加载获取页面
     getPagePre(){
-      getPage(ja.orgImage, sendPage(1), null).then(
+      getPage(address, sendPage(1), null).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -116,7 +118,7 @@ export default {
     },
     // 根据页码搜索
     getPageByCode(val){
-      getPage(ja.orgImage,sendPage(val),this.queryData).then(
+      getPage(address,sendPage(val),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -126,7 +128,7 @@ export default {
     },
     // 预加载获取树
     getTreePre(val){
-      getTree(ja.orgImage).then(
+      getTree(address).then(
           response=> {
             this.treeData = this.treeReload(response.tree)
           }
@@ -145,7 +147,7 @@ export default {
           this.queryData.treeList.push(i)
         }
       }
-      getPage(ja.orgImage,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -157,7 +159,7 @@ export default {
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
-      getPage(ja.orgImage,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage

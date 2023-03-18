@@ -50,12 +50,12 @@
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="ocr(scope.row);scope.row.status = 4" type="primary" v-show="buttonReload(scope.row.status,0)">识别</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,4)" plain disabled>识别中</el-button>
-              <el-button @click="aim(scope.row);scope.row.status = 5" type="primary" v-show="buttonReload(scope.row.status,1)">配准</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,5)" plain disabled>配准中</el-button>
-              <el-button @click="crop(scope.row);scope.row.status = 6" type="primary" v-show="buttonReload(scope.row.status,2)">裁剪</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,6)" plain disabled>裁剪中</el-button>
+              <el-button @click="ocr(scope.row);scope.row.status = CARRIAGE_STATUS.ocr_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.composite_finished)">识别</el-button>
+              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.ocr_ing)" plain disabled>识别中</el-button>
+              <el-button @click="aim(scope.row);scope.row.status = CARRIAGE_STATUS.align_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.ocr_finished)">配准</el-button>
+              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.align_ing)" plain disabled>配准中</el-button>
+              <el-button @click="crop(scope.row);scope.row.status = CARRIAGE_STATUS.crop_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.align_finished)">裁剪</el-button>
+              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.crop_ing)" plain disabled>裁剪中</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -83,15 +83,20 @@
 <script>
 import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
-import {juniorAddress as ja} from "@/tool/HostAddress";
+import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
+import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
 import CarriageInformation from "@/views/components/carriageInformation.vue";
 import {ElMessage} from "element-plus";
+const address = ja.carriageInfo;
 
 export default {
   name: "carriageInfo",
   components: {CarriageInformation},
   data() {
     return{
+      // 引入常量
+      CARRIAGE_STATUS,
+      COMPONENT_STATUS,
       // 树结构
       treeData: null,
       // 表格结构
@@ -126,7 +131,7 @@ export default {
      */
     // 预加载获取页面
     getPagePre(){
-      getPage(ja.carriageInfo, sendPage(1), null).then(
+      getPage(address, sendPage(1), null).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -137,7 +142,7 @@ export default {
     },
     // 根据页码搜索
     getPageByCode(val){
-      getPage(ja.carriageInfo,sendPage(val),this.queryData).then(
+      getPage(address,sendPage(val),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -147,7 +152,7 @@ export default {
     },
     // 预加载获取树
     getTreePre(val){
-      getTree(ja.carriageInfo).then(
+      getTree(address).then(
           response=> {
             this.treeData = this.treeReload(response.tree)
           }
@@ -166,7 +171,7 @@ export default {
           this.queryData.treeList.push(i)
         }
       }
-      getPage(ja.carriageInfo,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -178,7 +183,7 @@ export default {
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
-      getPage(ja.carriageInfo,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage

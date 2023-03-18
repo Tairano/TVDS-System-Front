@@ -5,6 +5,7 @@ import carriageInformation from '../views/public/carriageInformation.vue'
 import componentInformation from '../views/public/componentInformation.vue'
 import personalInformation from '../views/public/personalInformation.vue'
 import templateLibrary from '../views/public/templateLibrary.vue'
+import DeveloperModel from '../views/public/developerModel.vue'
 import LoginPage from '../views/components/loginPage.vue'
 
 const router = createRouter({
@@ -35,6 +36,11 @@ const router = createRouter({
     //   name: 'templateLib',
     //   component: templateLibrary
     // },
+    {
+      path: '/developerModel',
+      name: 'developerModel',
+      component: DeveloperModel
+    },
     {
       path: '/personalInfo',
       name: 'personalInfo',

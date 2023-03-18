@@ -150,13 +150,13 @@ export default {
       return year + '年' + month + '月' + day + '日';
     },
     missionStatusConverter(status) {
-      if (status === 1) {
+      if (status === 0) {
         return '作业中';
       } else if (status === 2) {
         return '正常';
       } else if (status === 3) {
         return '检出异常';
-      } else if (status === 4) {
+      } else if (status === 1) {
         return '已完结';
       }
     },

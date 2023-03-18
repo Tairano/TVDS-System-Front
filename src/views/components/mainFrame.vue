@@ -56,6 +56,7 @@
               <el-dropdown-menu>
                 <el-dropdown-item command="/">主页</el-dropdown-item>
                 <el-dropdown-item command="logOut">登出</el-dropdown-item>
+                <el-dropdown-item command="developerModel" v-if="IS_DEVELOPER_MODEL">开发者模式</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -71,9 +72,10 @@
 </template>
 
 <script lang="ts" setup>
+import {IS_DEVELOPER_MODEL} from "@/configs/settings"
 import { useRouter} from 'vue-router'
 import { Setting } from '@element-plus/icons-vue'
-import {ElMessage} from "element-plus";
+import {ElMessage} from "element-plus"
 
 const router = useRouter()
 // 侧边菜单触发事件
