@@ -38,10 +38,10 @@
           <el-table-column prop="carriageNo" label="车厢号" align="center"/>
           <el-table-column prop="status" label="状态" align="center">
             <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,0)">未检测</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,3)">检测中</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="success" plain v-show="buttonReload(scope.row.status,1)">正常</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="danger" plain v-show="buttonReload(scope.row.status,2)">异常</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.un_detect)">未检测</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.detect_ing)">检测中</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="success" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.common)">正常</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="danger" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.error)">异常</el-button>
             </template>
           </el-table-column>
           <el-table-column label="类型" align="center">
@@ -85,14 +85,20 @@
 <script>
 import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
-import {juniorAddress as ja} from "@/tool/HostAddress";
+import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
+import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
 import ImageInformation from "@/views/components/imageInformation.vue";
 import {ElMessage} from "element-plus";
+const address = ja.compoInfo;
+
 export default {
   name: "compoInfo",
   components: {ImageInformation},
   data() {
     return{
+      // 引入常量
+      CARRIAGE_STATUS,
+      COMPONENT_STATUS,
       // 树结构
       treeData: null,
       // 表格结构
@@ -126,7 +132,7 @@ export default {
      */
     // 预加载获取页面
     getPagePre(){
-      getPage(ja.compoInfo, sendPage(1), null).then(
+      getPage(address, sendPage(1), null).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -137,7 +143,7 @@ export default {
     },
     // 根据页码搜索
     getPageByCode(val){
-      getPage(ja.compoInfo,sendPage(val),this.queryData).then(
+      getPage(address,sendPage(val),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -147,7 +153,7 @@ export default {
     },
     // 预加载获取树
     getTreePre(val){
-      getTree(ja.compoInfo).then(
+      getTree(address).then(
           response=> {
             this.treeData = this.treeReload(response.tree)
           }
@@ -166,7 +172,7 @@ export default {
           this.queryData.treeList.push(i)
         }
       }
-      getPage(ja.compoInfo,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -180,7 +186,7 @@ export default {
       // 重设查询条件
       this.queryData.dateBegin = this.dateInfo[0].toString()+'T00:00:00'
       this.queryData.dateEnd = this.dateInfo[1].toString()+'T23:59:59'
-      getPage(ja.compoInfo,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage

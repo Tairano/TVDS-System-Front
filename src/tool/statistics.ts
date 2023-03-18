@@ -1,30 +1,30 @@
 import {axiosInstance as axios} from "@/tool/api/request";
-import {HostAddress} from "@/tool/HostAddress";
+import {HOST_ADDRESS} from "@/tool/api/constants";
 
 export function carriageStats() {
     return axios({
-        url: 'http://'+HostAddress+'/statistics/carriage',
+        url: 'http://'+HOST_ADDRESS+'/statistics/carriage',
         method: 'post',
     })
 }
 
 export function missionStats() {
     return axios({
-        url: 'http://'+HostAddress+'/statistics/mission',
+        url: 'http://'+HOST_ADDRESS+'/statistics/mission',
         method: 'post',
     })
 }
 
 export function detectStats() {
     return axios({
-        url: 'http://'+HostAddress+'/statistics/detect',
+        url: 'http://'+HOST_ADDRESS+'/statistics/detect',
         method: 'post',
     })
 }
 
 export function autoPlay() {
     return axios({
-        url: '/flow/auto',
+        url: 'http://'+HOST_ADDRESS+'/flow/auto',
         method: 'post',
         timeout: 999999999999999
     })

@@ -1,6 +1,6 @@
 import {postRequest, getRequest} from '@/tool/api/request'
 import {sendUrl} from '@/tool/Interface'
-import {seniorAddress as sa, juniorAddress as _ja} from '@/tool/HostAddress'
+import {SENIOR_ADDRESS as sa, JUNIOR_ADDRESS as _ja} from '@/tool/api/constants'
 
 // 获取页面
 export const getPage = (ja: string, pg: string, data: any)=> {
@@ -44,4 +44,9 @@ export const login = (userName: string, password: string)=> {
 // 登出
 export const logOut = ()=> {
     return postRequest(sendUrl(sa.user, _ja.logOut), null)
+}
+
+// 重设图片状态（开发者模式）
+export const __resetStatus = ()=> {
+    return postRequest(sendUrl(sa.developer, _ja.resetStatus), null)
 }
