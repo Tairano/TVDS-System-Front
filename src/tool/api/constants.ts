@@ -25,7 +25,8 @@ export const JUNIOR_ADDRESS = {
     downloadImage : 'download?path=',
     login : 'login?username=',
     logOut : '',
-    resetStatus : 'rollback'
+    resetStatus : 'rollback',
+    list: 'list/part?id='
 }
 
 // 状态值
@@ -34,9 +35,9 @@ export const CARRIAGE_STATUS = {
     ocr_finished : 1,
     align_finished : 2,
     crop_finished : 3,
-    ocr_ing : 4,
-    align_ing : 5,
-    crop_ing : 6
+    ocr_ing : 0.5,
+    align_ing : 1.5,
+    crop_ing : 2.5
 }
 export const COMPONENT_STATUS = {
     un_detect : 0,

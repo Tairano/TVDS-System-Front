@@ -18,9 +18,9 @@
         <el-button @click="downloadImg" type="primary">下载图片到本地</el-button>
       </div>
     </template>
-    <el-descriptions-item label="过检日期">{{ImageInfo.createTime}}</el-descriptions-item>
+    <el-descriptions-item label="过检日期">{{ImageInfo.compositeTime}}</el-descriptions-item>
     <el-descriptions-item label="上传时间">{{ImageInfo.updateTime}}</el-descriptions-item>
-    <el-descriptions-item label="检测日期">{{ImageInfo.compositeTime}}</el-descriptions-item>
+    <el-descriptions-item label="更新日期">{{ImageInfo.updateTime }}</el-descriptions-item>
     <el-descriptions-item label="图片编号">{{ImageInfo.id}}</el-descriptions-item>
     <el-descriptions-item>
       <template #label>
@@ -36,9 +36,13 @@
           部件类型
         </div>
       </template>
-      <el-tag size="small" type="success">弹簧</el-tag>
-      <el-tag size="small" type="success">轴承</el-tag>
-      <el-tag size="small" type="success">车轮</el-tag>
+      <el-tag
+          v-for="tag in ImageInfo.partCount"
+          :key="tag"
+          :disable-transitions="false"
+      >
+        {{ toChinese(tag.name)+ '×' + tag.count }}
+      </el-tag>
     </el-descriptions-item>
   </el-descriptions>
 </template>
@@ -82,7 +86,6 @@ export default{
     },
     // 图片名称验证功能
     detectImageName(){
-      console.log(this.ImageUrl,this.ImageInfo)
       this.getTemplate()
       if(this.ImageUrl != null){
         if(this.ImageUrl.split('/').pop() != null){

@@ -16,6 +16,12 @@ export const getTree = (ja: string)=> {
 export const getImg = (url: string)=> {
     return sendUrl(sa.image,_ja.getImage) + url
 }
+
+// 获取图片序列
+export const getImgList = (url: string)=> {
+    return postRequest(sendUrl('',_ja.list) + url, null)
+}
+
 // 下载图片
 export const dwnImg = (url: string, name: string)=> {
     const a = document.createElement('a');

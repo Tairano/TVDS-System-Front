@@ -1,11 +1,19 @@
 <template>
-  <el-card style="max-height:100vh; text-align: center; background-color: black; margin-bottom: 10px">
-    <el-image  key="image" :src="getImg(ImageUrl)" lazy style="height: 100%; width: auto"/>
+  <el-card style="text-align: center; background-color: white; margin-bottom: 10px">
+    <el-carousel arrow="always"
+                 :autoplay="false"
+                 trigger="click"
+                 height="50vh"
+                 @change="changeImage">
+      <el-carousel-item v-for="item in ImageList" :key="item" style="background-color: black">
+        <el-image  key="image" :src="getImg(item.imageUrl)" style="height: 100%"/>
+      </el-carousel-item>
+    </el-carousel>
   </el-card>
   <el-descriptions
       title="详细信息"
       direction="vertical"
-      :column="3"
+      :column="4"
       border
   >
     <template #extra>
@@ -17,51 +25,56 @@
         <el-button @click="downloadImg" type="primary">下载图片到本地</el-button>
       </div>
     </template>
-    <el-descriptions-item label="拍摄日期">{{ImageInfo.createTime}}</el-descriptions-item>
+    <el-descriptions-item label="创建日期">{{ImageInfo.createTime}}</el-descriptions-item>
     <el-descriptions-item label="上传时间">{{ImageInfo.updateTime}}</el-descriptions-item>
-    <el-descriptions-item label="检测日期">{{ImageInfo.checkTime}}</el-descriptions-item>
-  </el-descriptions>
-  <el-descriptions
-      direction="vertical"
-      :column="4"
-      border
-  >
-    <el-descriptions-item label="所在车厢ID">{{ImageInfo.updateTime}}</el-descriptions-item>
-    <el-descriptions-item label="图片编号">{{ImageInfo.id}}</el-descriptions-item>
+    <el-descriptions-item label="过检号">{{ImageInfo.inspectionSeq}}</el-descriptions-item>
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
           图片分类
         </div>
       </template>
-      <el-tag size="small">{{ImageInfo.model}}</el-tag>
-      <el-tag size="small">{{ImageInfo.partName}}</el-tag>
+      <el-tag size="small" type="success">{{ toChinese(ImageInfo.partName)}}</el-tag>
     </el-descriptions-item>
-    <el-descriptions-item label="部件类型">{{toChinese(ImageInfo.partName)}}</el-descriptions-item>
   </el-descriptions>
 </template>
 
 <script>
 import {toChinese} from "@/tool/utils";
-import {dwnImg, getImg} from "@/tool/api/methods";
+import {dwnImg, getImg, getImgList} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 export default{
-  name: "imageInformation",
+  name: "imageListInformation",
   data(){
     return{
       downLoadName: '',
-      imageData: null,
+      ImageUrl: '',
+      ImageList: Object,
+      ImageInfo: Object
     }
   },
   props: {
-    ImageUrl: String,
-    ImageInfo: Object
+    listUrl: String
   },
   methods:{
     toChinese,
     getImg,
+    getList(){
+      const xx = this
+      getImgList(this.listUrl).then(
+          response=> {
+            xx.ImageList = response
+            xx.ImageUrl = xx.ImageList[0].imageUrl
+            xx.ImageInfo = this.ImageList[0]
+          }
+      )
+    },
     downloadImg(){
       dwnImg(this.ImageUrl,this.downLoadName)
+    },
+    changeImage(current,past){
+      this.ImageUrl = this.ImageList[current].imageUrl
+      this.ImageInfo = this.ImageList[current]
     },
     // 图片名称验证功能
     detectImageName(){
@@ -82,8 +95,12 @@ export default{
   },
   mounted() {
     this.detectImageName()
+    this.getList()
   },
   watch:{
+    listUrl(){
+      this.getList()
+    },
     ImageUrl(){
       this.detectImageName()
     }
@@ -94,4 +111,3 @@ export default{
 <style scoped>
 
 </style>
-

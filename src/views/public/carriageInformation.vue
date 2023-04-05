@@ -1,32 +1,34 @@
 <template>
   <el-container class="--tv-page-frame">
-    <el-aside>
-      <el-card>
-        <el-button @click="treeQuery" type="primary">搜索</el-button>
-        <el-button @click="clearTree" >清空</el-button>
-      </el-card>
-      <el-card style="height: 87%; margin: 17px 0 0 0">
-        <el-tree
-            :data="treeData"
-            show-checkbox
-            node-key="id"
-            empty-text="没有数据"
-            ref="tree"
-        />
-      </el-card>
+    <el-aside width=" ">
     </el-aside>
     <el-container class="--tv-page-table">
       <el-header class="--tv-page-table-select">
         <el-input v-model="queryData.inspectionSeq" placeholder="请输入" style="width: 300px">
-          <template #prepend>按过检号搜素：</template>
+          <template #prepend>过检号</template>
         </el-input>
+        <div style="width: 20px"></div>
+        <el-date-picker style="max-width: 300px"
+                        v-model="dateInfo"
+                        type="daterange"
+                        value-format="YYYY-MM-DD"
+                        unlink-panels
+                        range-separator="-"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :shortcuts="dateShortCuts"
+        />
         <div style="width: 20px"></div>
         <el-input v-model="queryData.carriageId" placeholder="请输入" style="width: 300px">
-          <template #prepend>按车厢ID搜素：</template>
+          <template #prepend>车厢ID</template>
         </el-input>
         <div style="width: 20px"></div>
-        <el-input v-model="queryData.imageId" placeholder="请输入" style="width: 300px">
-          <template #prepend>按图片ID搜素：</template>
+        <el-input v-model="queryData.model" placeholder="请输入" style="width: 200px">
+          <template #prepend>型号</template>
+        </el-input>
+        <div style="width: 20px"></div>
+        <el-input v-model="queryData.cameraNumber" placeholder="请输入" style="width: 200px">
+          <template #prepend>机位号</template>
         </el-input>
         <div style="width: 20px"></div>
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
@@ -35,7 +37,9 @@
         <el-table :data="tableData" border stripe style="width: 98%;height: 100%">
           <el-table-column prop="inspectionSeq" label="过检号" align="center"/>
           <el-table-column prop="carriageId" label="车厢ID" align="center"/>
-          <el-table-column prop="id" label="图片ID" width="200%" align="center"/>
+          <el-table-column prop="compositeTime" label="过检时间" align="center"/>
+          <el-table-column prop="carriageNo" label="车厢号" align="center" width="70%"/>
+          <el-table-column prop="cameraNumber" label="机位号" align="center" width="70%"/>
           <el-table-column label="详略图" align="center">
             <template v-slot="scope">
               <el-button @click="viewImage(scope.row.url,scope.row)">查看大图</el-button>
@@ -43,10 +47,14 @@
           </el-table-column>
           <el-table-column label="配准图" align="center">
             <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.alignedUrl,scope.row)" :disabled="scope.row.status < 2">查看大图</el-button>
+              <el-button @click="viewImage(scope.row.alignedUrl,scope.row)" :disabled="scope.row.status < CARRIAGE_STATUS.align_finished">查看大图</el-button>
             </template>
           </el-table-column>
-          <el-table-column prop="carriageNo" label="车厢号" align="center"/>
+          <el-table-column label="部件信息" align="center">
+            <template v-slot="scope">
+              <el-button @click="viewCompImage(scope.row.dbId)" :disabled="scope.row.status < CARRIAGE_STATUS.crop_finished">查看部件图片</el-button>
+            </template>
+          </el-table-column>
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
@@ -78,6 +86,10 @@
                          :ImageInfo="dialogImageInfo">
     </carriageInformation>
   </el-dialog>
+  <el-dialog v-model="listDialog" style="width: 70%">
+    <imageListInformation :listUrl="listUrl">
+    </imageListInformation>
+  </el-dialog>
 </template>
 
 <script>
@@ -86,12 +98,13 @@ import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
 import CarriageInformation from "@/views/components/carriageInformation.vue";
+import ImageListInformation from "@/views/components/imageListInformation.vue";
 import {ElMessage} from "element-plus";
 const address = ja.carriageInfo;
 
 export default {
   name: "carriageInfo",
-  components: {CarriageInformation},
+  components: {ImageListInformation, CarriageInformation},
   data() {
     return{
       // 引入常量
@@ -114,14 +127,19 @@ export default {
       // 选中查看的图片url以及信息
       dialogImageUrl: '',
       dialogImageInfo: {},
+      // 选中图部件序列url以及信息
+      listUrl: '',
       // 弹窗是否显示
       dialog: false,
+      listDialog: false,
       // 查询条件类
       queryData : {
         treeList: [],
         inspectionSeq: '',
         carriageId: '',
-        imageId: ''
+        imageId: '',
+        model: '',
+        cameraNumber: ''
       },
     }
   },
@@ -183,6 +201,8 @@ export default {
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
+      this.queryData.dateBegin = this.dateInfo[0].toString()+'T00:00:00'
+      this.queryData.dateEnd = this.dateInfo[1].toString()+'T23:59:59'
       getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
@@ -196,6 +216,11 @@ export default {
       this.dialogImageUrl= url
       this.dialogImageInfo= info
       this.dialog= true
+    },
+    // 查看序列大图
+    viewCompImage(url){
+      this.listUrl= url.toString()
+      this.listDialog= true
     },
     // OCR识别
     ocr(row){

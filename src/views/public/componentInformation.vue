@@ -237,10 +237,7 @@ export default {
     },
     // 按钮状态重载
     buttonReload(status,target){
-      if(status === target){
-        return true
-      }
-      else return false
+      return status === target;
     }
   },
   created() {
