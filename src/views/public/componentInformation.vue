@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import {getPage, execCom} from "@/tool/api/methods";
+import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
@@ -151,6 +151,14 @@ export default {
           }
       )
     },
+    // 预加载获取树
+    getTreePre(){
+      getTree(address).then(
+          response=> {
+            this.treeData = this.treeReload(response.tree)
+          }
+      )
+    },
     // 树条件筛选器
     treeQuery(){
       // 清空子界面的其他查询条件。树优先级更高，所以只有树执行该操作
@@ -182,7 +190,7 @@ export default {
       }
       else{
         this.query.dateBegin = ''
-        this.query.dateEnd = ''
+        this.query.dateBegin = ''
       }
       getPage(address,sendPage(1),this.query).then(
           response=> {

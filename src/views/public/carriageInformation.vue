@@ -283,7 +283,6 @@ export default {
   },
   mounted() {
     this.getPagePre()
-    this.getTreePre()
   }
 }
 </script>
