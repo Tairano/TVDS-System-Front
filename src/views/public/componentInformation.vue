@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import {getPage, getTree, execCom} from "@/tool/api/methods";
+import {getPage, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
@@ -110,7 +110,7 @@ export default {
       // 页面大小，后端返回
       pageSize: null,
       // 日期选择器默认内容
-      dateInfo: '',
+      dateInfo: [],
       // 日期选择器快捷输入
       dateShortCuts: DataShortCups,
       // 选中查看的图片url以及信息
@@ -119,7 +119,7 @@ export default {
       // 弹窗是否显示
       dialog: false,
       // 查询条件类
-      queryData : {
+      query : {
         treeList: [],
         dateBegin: Date,
         dateEnd: Date
@@ -143,7 +143,7 @@ export default {
     },
     // 根据页码搜索
     getPageByCode(val){
-      getPage(address,sendPage(val),this.queryData).then(
+      getPage(address,sendPage(val),this.query).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -151,28 +151,20 @@ export default {
           }
       )
     },
-    // 预加载获取树
-    getTreePre(val){
-      getTree(address).then(
-          response=> {
-            this.treeData = this.treeReload(response.tree)
-          }
-      )
-    },
     // 树条件筛选器
     treeQuery(){
       // 清空子界面的其他查询条件。树优先级更高，所以只有树执行该操作
-      this.dateInfo = null
-      this.queryData.dateBegin = null
-      this.queryData.dateEnd = null
+      this.dateInfo = []
+      this.query.dateBegin = null
+      this.query.dateEnd = null
       // 加载树条件
-      this.queryData.treeList = []
+      this.query.treeList = []
       for(let i of this.$refs.tree.getCheckedKeys()){
         if(i.split('_')[2] != null){
-          this.queryData.treeList.push(i)
+          this.query.treeList.push(i)
         }
       }
-      getPage(address,sendPage(1),this.queryData).then(
+      getPage(address,sendPage(1),this.query).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -184,9 +176,15 @@ export default {
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
-      this.queryData.dateBegin = this.dateInfo[0].toString()+'T00:00:00'
-      this.queryData.dateEnd = this.dateInfo[1].toString()+'T23:59:59'
-      getPage(address,sendPage(1),this.queryData).then(
+      if(this.dateInfo && this.dateInfo[0] && this.dateInfo[1]){
+        this.query.dateBegin = this.dateInfo[0].toString()+'T00:00:00'
+        this.query.dateEnd = this.dateInfo[1].toString()+'T23:59:59'
+      }
+      else{
+        this.query.dateBegin = ''
+        this.query.dateEnd = ''
+      }
+      getPage(address,sendPage(1),this.query).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
