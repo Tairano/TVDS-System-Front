@@ -1,11 +1,11 @@
 <template>
   <el-container class="--tv-page-frame">
-    <el-aside>
+    <el-aside style="">
       <el-card>
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card style="height: 87%; margin: 17px 0 0 0">
+      <el-card style="height: 87%; margin: 17px 0 0 0; overflow: auto">
         <el-tree
             :data="treeData"
             show-checkbox
@@ -27,7 +27,16 @@
             end-placeholder="结束日期"
             :shortcuts="dateShortCuts"
         />
-        <div style="width: 100px"></div>
+        <div style="width: 60px"></div>
+        <el-select v-model="query.status" placeholder="部件状态">
+          <el-option
+              v-for="item in COMPONENT_STATUS_IN_CHECK"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+        <div style="width: 60px"></div>
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
       </el-header>
       <el-main>
@@ -86,7 +95,7 @@
 import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
-import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
+import {CARRIAGE_STATUS, COMPONENT_STATUS, COMPONENT_STATUS_IN_CHECK} from "@/tool/api/constants";
 import ImageInformation from "@/views/components/imageInformation.vue";
 import {ElMessage} from "element-plus";
 const address = ja.compoInfo;
@@ -99,6 +108,7 @@ export default {
       // 引入常量
       CARRIAGE_STATUS,
       COMPONENT_STATUS,
+      COMPONENT_STATUS_IN_CHECK,
       // 树结构
       treeData: null,
       // 表格结构
@@ -122,7 +132,8 @@ export default {
       query : {
         treeList: [],
         dateBegin: Date,
-        dateEnd: Date
+        dateEnd: Date,
+        status: null
       },
     }
   },
@@ -165,6 +176,7 @@ export default {
       this.dateInfo = []
       this.query.dateBegin = null
       this.query.dateEnd = null
+      this.query.status = null
       // 加载树条件
       this.query.treeList = []
       for(let i of this.$refs.tree.getCheckedKeys()){

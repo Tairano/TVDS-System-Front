@@ -5,7 +5,7 @@
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card style="height: 87%; margin: 17px 0 0 0">
+      <el-card style="height: 87%; margin: 17px 0 0 0; overflow: auto">
         <el-tree
             :data="treeData"
             show-checkbox

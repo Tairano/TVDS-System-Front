@@ -30,6 +30,7 @@ export const JUNIOR_ADDRESS = {
 }
 
 // 状态值
+// 车辆状态
 export const CARRIAGE_STATUS = {
     composite_finished : 0,
     ocr_finished : 1,
@@ -39,9 +40,24 @@ export const CARRIAGE_STATUS = {
     align_ing : 1.5,
     crop_ing : 2.5
 }
+// 部件状态
 export const COMPONENT_STATUS = {
     un_detect : 0,
     error : 1,
     common : 2,
     detect_ing : 3,
 }
+// 部件状态（筛选蓝）
+export const COMPONENT_STATUS_IN_CHECK = [{
+        value: -1,
+        label: '任意'
+    }, {
+        value: 0,
+        label: '未检测'
+    }, {
+        value: 1,
+        label: '异常'
+    }, {
+        value: 2,
+        label: '正常'
+    }]
