@@ -54,25 +54,25 @@
           <el-menu-item index="/mission">
             <template #default>
               <el-icon><House/></el-icon>
-              首页
+              任务概览
             </template>
           </el-menu-item>
-          <el-menu-item index="orgImageUser">
+          <el-menu-item index="carriageInfoUser">
             <template #default>
               <el-icon><Picture /></el-icon>
-              原始图片
+              车厢信息审核
             </template>
           </el-menu-item>
           <el-menu-item index="compoInfoUser">
             <template #default>
               <el-icon><Cpu /></el-icon>
-              部件信息
+              部件信息审核
             </template>
           </el-menu-item>
           <el-menu-item index="wrongCompUser">
             <template #default>
               <el-icon><warning /></el-icon>
-              问题部件
+              问题部件审核
             </template>
           </el-menu-item>
         </el-menu-item-group>

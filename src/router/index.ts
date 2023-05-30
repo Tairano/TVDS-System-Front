@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import dashBoard from '../views/public/admin/dashBoard.vue'
 import dashBoardForUser from '../views/public/role/dashBoardForUser.vue'
 import originalImage from '../views/public/admin/originalImage.vue'
-import originalImageForUser from '../views/public/role/originalImageForUser.vue'
 import carriageInformation from '../views/public/admin/carriageInformation.vue'
+import carriageInformationForUser from '../views/public/role/carriageInformationForUser.vue'
 import componentInformation from '../views/public/admin/componentInformation.vue'
 import componentInformationForUser from '../views/public/role/componentInformationForUser.vue'
 import wrongComponent from '../views/public/admin/wrongComponent.vue'
@@ -31,14 +31,14 @@ const router = createRouter({
       component: originalImage
     },
     {
-      path: '/orgImageUser',
-      name: 'orgImageUser',
-      component: originalImageForUser
-    },
-    {
       path: '/carriageInfo',
       name: 'carriageInfo',
       component: carriageInformation
+    },
+    {
+      path: '/carriageInfoUser',
+      name: 'carriageInfoUser',
+      component: carriageInformationForUser
     },
     {
       path: '/compoInfo',
