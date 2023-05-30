@@ -1,24 +1,19 @@
 <template>
-  <el-card style="text-align: center; background-color: black;margin-bottom: 10px">
-    <el-image  key="image" :src="getImg(ImageUrl)" lazy />
+  <el-card style="max-height:100vh; text-align: center; background-color: black; margin-bottom: 10px">
+    <el-image  key="image" :src="getImg(ImageUrl)" lazy style="height: 100%; width: auto"/>
   </el-card>
 </template>
 
 <script>
 import {toChinese} from "@/tool/utils";
-import {dwnImg, getImg, getTmp} from "@/tool/api/methods";
+import {dwnImg, getImg} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 export default{
-  name: "carriageAudit",
+  name: "imageAudit",
   data(){
     return{
       downLoadName: '',
       imageData: null,
-      templateData: {
-        bearing: [],
-        spring: [],
-        wheel: []
-      }
     }
   },
   props: {
@@ -31,19 +26,8 @@ export default{
     downloadImg(){
       dwnImg(this.ImageUrl,this.downLoadName)
     },
-    // 请求模板数据
-    getTemplate(){
-      getTmp().then(
-          response=> {
-            this.templateData.spring = response.spring
-            this.templateData.bearing = response.bearing
-            this.templateData.wheel = response.wheel
-          }
-      )
-    },
     // 图片名称验证功能
     detectImageName(){
-      this.getTemplate()
       if(this.ImageUrl != null){
         if(this.ImageUrl.split('/').pop() != null){
           if(this.ImageUrl.split('/').pop().split('.')[0] != null){
@@ -71,7 +55,6 @@ export default{
 </script>
 
 <style scoped>
-carriage-information{
-  --el-dialog-width: 80%;
-}
+
 </style>
+

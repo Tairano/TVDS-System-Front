@@ -58,7 +58,7 @@
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="audit(scope.row)" type="primary">审核</el-button>
+              <el-button @click="auditDialog(scope.row.url,scope.row)" type="primary">审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -85,7 +85,7 @@
     <imageListInformation :listUrl="listUrl">
     </imageListInformation>
   </el-dialog>
-  <el-dialog v-model="dialog" style="width: 95%; height: auto">
+  <el-dialog v-model="audit" style="width: 95%; height: auto">
     <carriage-audit :ImageUrl="dialogImageUrl"
                          :ImageInfo="dialogImageInfo">
     </carriage-audit>
@@ -100,7 +100,7 @@ import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
 import CarriageInformation from "@/views/components/carriageImageDialog.vue";
 import ImageListInformation from "@/views/components/imageListDialog.vue";
 import {ElMessage} from "element-plus";
-import CarriageAudit from "@/views/components/carriageAuditDialog";
+import CarriageAudit from "@/views/components/carriageAuditDialog.vue";
 const address = ja.carriageInfo;
 
 export default {
@@ -131,6 +131,7 @@ export default {
       // 弹窗是否显示
       dialog: false,
       listDialog: false,
+      audit: false,
       // 查询条件类
       query : {
         inspectionSeq: '',
@@ -225,8 +226,10 @@ export default {
       return status === target;
     },
     // 唤起审核栏
-    audit(){
-
+    auditDialog(url,info){
+      this.dialogImageUrl= url
+      this.dialogImageInfo= info
+      this.audit = true
     }
   },
   created() {
