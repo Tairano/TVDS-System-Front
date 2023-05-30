@@ -14,7 +14,7 @@
             </div>
           </template>
         </el-card>
-        <el-menu-item-group style="vertical-align: middle; height: 100%">
+        <el-menu-item-group style="vertical-align: middle; height: 100%" v-if="getPermission() === 'admin'">
           <template #title>
           </template>
           <el-menu-item index="/">
@@ -41,7 +41,40 @@
               部件信息
             </template>
           </el-menu-item>
-<!--          <el-menu-item index="templateLib">模板库</el-menu-item>-->
+          <el-menu-item index="compoInfo">
+            <template #default>
+              <el-icon><warning /></el-icon>
+              问题部件
+            </template>
+          </el-menu-item>
+        </el-menu-item-group>
+        <el-menu-item-group style="vertical-align: middle; height: 100%" v-if="getPermission() === 'user'">
+          <template #title>
+          </template>
+          <el-menu-item index="/mission">
+            <template #default>
+              <el-icon><House/></el-icon>
+              首页
+            </template>
+          </el-menu-item>
+          <el-menu-item index="orgImage">
+            <template #default>
+              <el-icon><Picture /></el-icon>
+              原始图片
+            </template>
+          </el-menu-item>
+          <el-menu-item index="compoInfo">
+            <template #default>
+              <el-icon><Cpu /></el-icon>
+              部件信息
+            </template>
+          </el-menu-item>
+          <el-menu-item index="compoInfo">
+            <template #default>
+              <el-icon><warning /></el-icon>
+              问题部件
+            </template>
+          </el-menu-item>
         </el-menu-item-group>
       </el-menu>
     </el-aside>
@@ -73,8 +106,8 @@
 
 <script lang="ts" setup>
 import {IS_DEVELOPER_MODEL} from "@/configs/settings"
-import { useRouter} from 'vue-router'
-import { Setting } from '@element-plus/icons-vue'
+import {useRouter} from 'vue-router'
+import {Setting} from '@element-plus/icons-vue'
 import {ElMessage} from "element-plus"
 
 const router = useRouter()
@@ -82,6 +115,17 @@ const router = useRouter()
 function handleSelect(index : string){
   router.push(index)
 }
+// 获取登录账号权限
+function getPermission(){
+  console.log(sessionStorage.getItem('role'))
+  if(sessionStorage.getItem('role') != null)
+    return sessionStorage.getItem('role')
+  else {
+    console.log("wrong.")
+    return "none"
+  }
+}
+
 // 顶部下拉菜单触发事件
 function handleCommand(command: string){
   if(command === 'logOut'){

@@ -31,11 +31,6 @@ const router = createRouter({
       name: 'compoInfo',
       component: componentInformation
     },
-    // {
-    //   path: '/templateLib',
-    //   name: 'templateLib',
-    //   component: templateLibrary
-    // },
     {
       path: '/developerModel',
       name: 'developerModel',

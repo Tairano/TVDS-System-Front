@@ -103,6 +103,7 @@ export default {
                 else{
                   sessionStorage.setItem('token',response.token)
                   sessionStorage.setItem('userInfo',response.userInfo)
+                  sessionStorage.setItem('role',response.userInfo.role)
                   ElMessage({
                     type: 'success',
                     message: '登录成功！'
