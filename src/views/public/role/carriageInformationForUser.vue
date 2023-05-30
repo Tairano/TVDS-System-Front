@@ -58,12 +58,7 @@
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="ocr(scope.row);scope.row.status = CARRIAGE_STATUS.ocr_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.composite_finished)">识别</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.ocr_ing)" plain disabled>识别中</el-button>
-              <el-button @click="aim(scope.row);scope.row.status = CARRIAGE_STATUS.align_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.ocr_finished)">配准</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.align_ing)" plain disabled>配准中</el-button>
-              <el-button @click="crop(scope.row);scope.row.status = CARRIAGE_STATUS.crop_ing" type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.align_finished)">裁剪</el-button>
-              <el-button type="primary" v-show="buttonReload(scope.row.status,CARRIAGE_STATUS.crop_ing)" plain disabled>裁剪中</el-button>
+              <el-button @click="audit(scope.row)" type="primary">审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -90,6 +85,11 @@
     <imageListInformation :listUrl="listUrl">
     </imageListInformation>
   </el-dialog>
+  <el-dialog v-model="dialog" style="width: 95%; height: auto">
+    <carriage-audit :ImageUrl="dialogImageUrl"
+                         :ImageInfo="dialogImageInfo">
+    </carriage-audit>
+  </el-dialog>
 </template>
 
 <script>
@@ -97,14 +97,15 @@ import {getPage, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
-import CarriageInformation from "@/views/components/carriageInformation.vue";
-import ImageListInformation from "@/views/components/imageListInformation.vue";
+import CarriageInformation from "@/views/components/carriageImageDialog.vue";
+import ImageListInformation from "@/views/components/imageListDialog.vue";
 import {ElMessage} from "element-plus";
+import CarriageAudit from "@/views/components/carriageAuditDialog";
 const address = ja.carriageInfo;
 
 export default {
   name: "carriageInfoUser",
-  components: {ImageListInformation, CarriageInformation},
+  components: {CarriageAudit, ImageListInformation, CarriageInformation},
   data() {
     return{
       // 引入常量
@@ -196,60 +197,6 @@ export default {
       this.listUrl= url.toString()
       this.listDialog= true
     },
-    // OCR识别
-    ocr(row){
-      execCom('ocr/',row.dbId).then(
-          response=>{
-            const newData = response.data
-            for(var i in this.tableData){
-              if(this.tableData[i].dbId === newData.dbId){
-                this.tableData[i] = newData
-                break
-              }
-            }
-            ElMessage({
-              type: 'success',
-              message: response.message
-            })
-          }
-      )
-    },
-    // AIM配准
-    aim(row){
-      execCom('align/',row.dbId).then(
-          response=>{
-            const newData = response.data
-            for(var i in this.tableData){
-              if(this.tableData[i].dbId === newData.dbId){
-                this.tableData[i] = newData
-                break
-              }
-            }
-            ElMessage({
-              type: 'success',
-              message: response.message
-            })
-          }
-      )
-    },
-    // CROP裁剪
-    crop(row){
-      execCom('crop/',row.dbId).then(
-          response=>{
-            const newData = response.data
-            for(var i in this.tableData){
-              if(this.tableData[i].dbId === newData.dbId){
-                this.tableData[i] = newData
-                break
-              }
-            }
-            ElMessage({
-              type: 'success',
-              message: response.message
-            })
-          }
-      )
-    },
     /*
      * 数据处理功能
      */
@@ -276,6 +223,10 @@ export default {
     // 按钮状态重载
     buttonReload(status,target){
       return status === target;
+    },
+    // 唤起审核栏
+    audit(){
+
     }
   },
   created() {

@@ -65,7 +65,7 @@
 import {getPage, getTree} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
-import ImageInformation from "@/views/components/imageInformation.vue";
+import ImageInformation from "@/views/components/compImageDialog.vue";
 const address = ja.orgImage;
 
 export default {

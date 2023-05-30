@@ -97,8 +97,8 @@ import {getPage, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
-import CarriageInformation from "@/views/components/carriageInformation.vue";
-import ImageListInformation from "@/views/components/imageListInformation.vue";
+import CarriageInformation from "@/views/components/carriageImageDialog.vue";
+import ImageListInformation from "@/views/components/imageListDialog.vue";
 import {ElMessage} from "element-plus";
 const address = ja.carriageInfo;
 

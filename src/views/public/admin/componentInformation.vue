@@ -96,7 +96,7 @@ import {getPage, getTree, execCom} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS, COMPONENT_STATUS_IN_CHECK} from "@/tool/api/constants";
-import ImageInformation from "@/views/components/imageInformation.vue";
+import ImageInformation from "@/views/components/compImageDialog.vue";
 import {ElMessage} from "element-plus";
 const address = ja.compoInfo;
 
