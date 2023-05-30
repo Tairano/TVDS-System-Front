@@ -41,7 +41,7 @@
               部件信息
             </template>
           </el-menu-item>
-          <el-menu-item index="compoInfo">
+          <el-menu-item index="wrongComp">
             <template #default>
               <el-icon><warning /></el-icon>
               问题部件
@@ -57,19 +57,19 @@
               首页
             </template>
           </el-menu-item>
-          <el-menu-item index="orgImage">
+          <el-menu-item index="orgImageUser">
             <template #default>
               <el-icon><Picture /></el-icon>
               原始图片
             </template>
           </el-menu-item>
-          <el-menu-item index="compoInfo">
+          <el-menu-item index="compoInfoUser">
             <template #default>
               <el-icon><Cpu /></el-icon>
               部件信息
             </template>
           </el-menu-item>
-          <el-menu-item index="compoInfo">
+          <el-menu-item index="wrongCompUser">
             <template #default>
               <el-icon><warning /></el-icon>
               问题部件
@@ -117,11 +117,9 @@ function handleSelect(index : string){
 }
 // 获取登录账号权限
 function getPermission(){
-  console.log(sessionStorage.getItem('role'))
   if(sessionStorage.getItem('role') != null)
     return sessionStorage.getItem('role')
   else {
-    console.log("wrong.")
     return "none"
   }
 }

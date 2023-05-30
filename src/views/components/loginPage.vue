@@ -104,6 +104,7 @@ export default {
                   sessionStorage.setItem('token',response.token)
                   sessionStorage.setItem('userInfo',response.userInfo)
                   sessionStorage.setItem('role',response.userInfo.role)
+                  window.location.reload()
                   ElMessage({
                     type: 'success',
                     message: '登录成功！'
