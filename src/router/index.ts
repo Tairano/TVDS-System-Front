@@ -1,11 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import dashBoard from '../views/public/dashBoard.vue'
-import originalImage from '../views/public/originalImage.vue'
-import carriageInformation from '../views/public/carriageInformation.vue'
-import componentInformation from '../views/public/componentInformation.vue'
-import personalInformation from '../views/public/personalInformation.vue'
-import templateLibrary from '../views/public/templateLibrary.vue'
-import DeveloperModel from '../views/public/developerModel.vue'
+import dashBoard from '../views/public/admin/dashBoard.vue'
+import dashBoardForUser from '../views/public/role/dashBoardForUser.vue'
+import originalImage from '../views/public/admin/originalImage.vue'
+import originalImageForUser from '../views/public/role/originalImageForUser.vue'
+import carriageInformation from '../views/public/admin/carriageInformation.vue'
+import componentInformation from '../views/public/admin/componentInformation.vue'
+import componentInformationForUser from '../views/public/role/componentInformationForUser.vue'
+import wrongComponent from '../views/public/admin/wrongComponent.vue'
+import wrongComponentForUser from '../views/public/role/wrongComponentForUser.vue'
+import personalInformation from '../views/public/admin/personalInformation.vue'
+import DeveloperModel from '../views/public/admin/developerModel.vue'
 import LoginPage from '../views/components/loginPage.vue'
 
 const router = createRouter({
@@ -17,9 +21,19 @@ const router = createRouter({
       component: dashBoard
     },
     {
+      path: '/mission',
+      name: 'dashBoardForUser',
+      component: dashBoardForUser
+    },
+    {
       path: '/orgImage',
       name: 'orgImage',
       component: originalImage
+    },
+    {
+      path: '/orgImageUser',
+      name: 'orgImageUser',
+      component: originalImageForUser
     },
     {
       path: '/carriageInfo',
@@ -30,6 +44,21 @@ const router = createRouter({
       path: '/compoInfo',
       name: 'compoInfo',
       component: componentInformation
+    },
+    {
+      path: '/compoInfoUser',
+      name: 'compoInfoUser',
+      component: componentInformationForUser
+    },
+    {
+      path: '/wrongComp',
+      name: 'wrongComp',
+      component: wrongComponent
+    },
+    {
+      path: '/wrongCompUser',
+      name: 'wrongCompUser',
+      component: wrongComponentForUser
     },
     {
       path: '/developerModel',
