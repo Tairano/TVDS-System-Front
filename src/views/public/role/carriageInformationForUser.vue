@@ -38,27 +38,12 @@
           <el-table-column prop="inspectionSeq" label="过检号" align="center"/>
           <el-table-column prop="carriageId" label="车厢ID" align="center"/>
           <el-table-column prop="compositeTime" label="过检时间" align="center"/>
-          <el-table-column prop="carriageNo" label="车厢号" align="center" width="70%"/>
-          <el-table-column prop="cameraNumber" label="机位号" align="center" width="70%"/>
-          <el-table-column label="详略图" align="center">
-            <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.url,scope.row)">查看大图</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="配准图" align="center">
-            <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.alignedUrl,scope.row)" :disabled="scope.row.status < CARRIAGE_STATUS.align_finished">查看大图</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="部件信息" align="center">
-            <template v-slot="scope">
-              <el-button @click="viewCompImage(scope.row.dbId)" :disabled="scope.row.status < CARRIAGE_STATUS.crop_finished">查看部件图片</el-button>
-            </template>
-          </el-table-column>
+          <el-table-column prop="carriageNo" label="车厢号" align="center" width="90%"/>
+          <el-table-column prop="cameraNumber" label="机位号" align="center" width="90%"/>
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="auditDialog(scope.row.url,scope.row)" type="primary">审核</el-button>
+              <el-button @click="auditDialog(scope.row.url,scope.row.missionId)" type="primary">审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -87,21 +72,19 @@
   </el-dialog>
   <el-dialog v-model="audit" style="width: 95%; height: auto">
     <carriage-audit :ImageUrl="dialogImageUrl"
-                         :ImageInfo="dialogImageInfo">
+                    :MissionId="dialogMissionId"
+                    :shows="closeAuditDialog">
     </carriage-audit>
   </el-dialog>
 </template>
 
 <script>
-import {getPage, execCom} from "@/tool/api/methods";
+import {getAllMissions} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
-import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
 import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
 import CarriageInformation from "@/views/components/carriageImageDialog.vue";
 import ImageListInformation from "@/views/components/imageListDialog.vue";
-import {ElMessage} from "element-plus";
 import CarriageAudit from "@/views/components/carriageAuditDialog.vue";
-const address = ja.carriageInfo;
 
 export default {
   name: "carriageInfoUser",
@@ -125,6 +108,7 @@ export default {
       dateShortCuts: DataShortCups,
       // 选中查看的图片url以及信息
       dialogImageUrl: '',
+      dialogMissionId: 0,
       dialogImageInfo: {},
       // 选中图部件序列url以及信息
       listUrl: '',
@@ -149,7 +133,7 @@ export default {
      */
     // 预加载获取页面
     getPagePre(){
-      getPage(address, sendPage(1), null).then(
+      getAllMissions(sendPage(1), null).then(
           response=> {
             this.tableData = response.page
             this.currentPage = response.currentPage
@@ -160,7 +144,7 @@ export default {
     },
     // 根据页码搜索
     getPageByCode(val){
-      getPage(address,sendPage(val),this.query).then(
+      getAllMissions(sendPage(val),this.query).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -179,7 +163,7 @@ export default {
         this.query.dateBegin = ''
         this.query.dateEnd = ''
       }
-      getPage(address,sendPage(1),this.query).then(
+      getAllMissions(sendPage(1),this.query).then(
           response=> {
             this.tableData = response.page
             this.totalPage = response.totalPage
@@ -226,10 +210,14 @@ export default {
       return status === target;
     },
     // 唤起审核栏
-    auditDialog(url,info){
+    auditDialog(url,missionId){
       this.dialogImageUrl= url
-      this.dialogImageInfo= info
+      this.dialogMissionId= missionId
       this.audit = true
+    },
+    // 关闭审核栏
+    closeAuditDialog(){
+      this.audit = false
     }
   },
   created() {

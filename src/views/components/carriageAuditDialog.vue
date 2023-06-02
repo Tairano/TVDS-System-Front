@@ -2,11 +2,54 @@
   <el-card style="text-align: center; background-color: black;margin-bottom: 10px">
     <el-image  key="image" :src="getImg(ImageUrl)" lazy />
   </el-card>
+  <el-descriptions
+      title="详细信息"
+      direction="vertical"
+      :column="1">
+    <el-descriptions-item label="item">
+      <el-table :data="data.affiliateParts">
+        <el-table-column prop="id" label="部件id" align="center" width="200"/>
+        <el-table-column prop="partName" label="部件类型" align="center" width="200">
+          <template v-slot="scope">
+            {{toChinese(scope.row.partName)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="partName" label="部件状态" align="center" width="200">
+          <template v-slot="scope">
+            {{statusToChinese(scope.row.status)}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template v-slot="scope">
+            <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status">
+              <el-radio label="正常" model-value="2"></el-radio>
+              <el-radio label="异常" model-value="1"></el-radio>
+            </el-radio-group>
+<!--            <el-select placeholder="请选择" v-model="scope.row.check">-->
+<!--              <el-option label="与结果一致" value="same" onselect=""></el-option>-->
+<!--              <el-option label="与结果不一致" value="abnormal"></el-option>-->
+<!--            </el-select>-->
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-descriptions-item>
+    <el-descriptions-item label="备注">
+      <el-input type="textarea" v-model="form.comment"></el-input>
+    </el-descriptions-item>
+  </el-descriptions>
+  <el-descriptions>
+    <template #extra>
+      <div style="display: flex">
+        <el-button @click="onSubmit" type="primary">提交审核</el-button>
+        <el-button @click="this.shows()">取消</el-button>
+      </div>
+    </template>
+  </el-descriptions>
 </template>
 
 <script>
-import {toChinese} from "@/tool/utils";
-import {dwnImg, getImg, getTmp} from "@/tool/api/methods";
+import {statusToChinese, toChinese} from "@/tool/utils";
+import {dwnImg, getCarriageAudit, getImg, getTmp, submitAuditResult} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 export default{
   name: "carriageAudit",
@@ -18,16 +61,26 @@ export default{
         bearing: [],
         spring: [],
         wheel: []
+      },
+      form: {
+        comment: '',
+        results: []
+      },
+      data: {
+        affiliateParts: []
       }
     }
   },
   props: {
     ImageUrl: String,
-    ImageInfo: Object
+    MissionId: Number,
+    shows: function (){}
   },
   methods:{
     toChinese,
+    statusToChinese,
     getImg,
+    getCarriageAudit,
     downloadImg(){
       dwnImg(this.ImageUrl,this.downLoadName)
     },
@@ -40,6 +93,30 @@ export default{
             this.templateData.wheel = response.wheel
           }
       )
+    },
+    // 提交审核
+    onSubmit(){
+      for(let i in this.form.results) {
+        if(this.form.results[i].status === '正常') this.form.results[i].status = 2
+        else if(this.form.results[i].status === '异常') this.form.results[i].status = 1
+      }
+      submitAuditResult(this.MissionId, this.form).then(
+          response => {
+            this.shows()
+            ElMessage({
+              type: 'success',
+              message: '已提交结果。'
+            })
+          }
+      )
+    },
+    // 从 dbId 获取下标
+    getIndexByDbId(dbId){
+      for(let i in this.form.results){
+        if(this.form.results[i].partId === dbId){
+          return i
+        }
+      }
     },
     // 图片名称验证功能
     detectImageName(){
@@ -57,14 +134,30 @@ export default{
         type: 'alert',
         message: '图片名称或地址加载失败，请检查系统问题，或手动设置文件名称'
       })
+    },
+    // 获取任务信息功能
+    getMissionInfo(){
+      this.getCarriageAudit(this.MissionId).then(
+          response =>{
+            this.data = response
+            this.form.results = []
+            for(let i in this.data.affiliateParts){
+              this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: 0})
+            }
+          }
+      )
     }
   },
   mounted() {
     this.detectImageName()
+    this.getMissionInfo()
   },
   watch:{
     ImageUrl(){
       this.detectImageName()
+    },
+    MissionId(){
+      this.getMissionInfo()
     }
   }
 }

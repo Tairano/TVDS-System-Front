@@ -1,6 +1,6 @@
 import {postRequest, getRequest} from '@/tool/api/request'
 import {sendUrl} from '@/tool/Interface'
-import {SENIOR_ADDRESS as sa, JUNIOR_ADDRESS as _ja} from '@/tool/api/constants'
+import {SENIOR_ADDRESS as sa, JUNIOR_ADDRESS as _ja, JUNIOR_ADDRESS} from '@/tool/api/constants'
 
 // 获取页面
 export const getPage = (ja: string, pg: string, data: any)=> {
@@ -14,6 +14,26 @@ export const getTree = (ja: string)=> {
 
 // 获取图片
 export const getImg = (url: string)=> {
+    return sendUrl(sa.image,_ja.getImage) + url
+}
+
+// 获取车厢审核信息
+export const getCarriageAudit = (missionId: number)=> {
+    return postRequest(sendUrl(sa.verify, _ja.currentMission) + missionId, null)
+}
+
+// 获取当前用户任务视图
+export const getAllMissions = (pg: string, data: any)=> {
+    return postRequest(sendUrl(sa.verify, _ja.allMissions) + pg, data)
+}
+
+// 提交审核结果
+export const submitAuditResult = (missionId: String, data: any) => {
+    return postRequest(sendUrl(sa.verify, _ja.submitAudit) + missionId, data)
+}
+
+// 通过部件获取车厢信息
+export const getCarriageByComp = (url: string)=> {
     return sendUrl(sa.image,_ja.getImage) + url
 }
 

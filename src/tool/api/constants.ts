@@ -11,6 +11,7 @@ export const SENIOR_ADDRESS = {
     image : 'blob',
     user : 'user',
     developer : 'test',
+    verify : 'verify'
 }
 
 // 二级地址
@@ -26,7 +27,12 @@ export const JUNIOR_ADDRESS = {
     login : 'login?username=',
     logOut : '',
     resetStatus : 'rollback',
-    list: 'list/part?id='
+    list: 'list/part?id=',
+    allMissions: 'getJobs',
+    currentMission: 'missionDetail/',
+    submitAudit: 'submit/',
+    getCarriageByComp: 'track',
+    getDefectList: 'defect'
 }
 
 // 状态值

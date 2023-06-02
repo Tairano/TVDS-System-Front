@@ -63,12 +63,6 @@
               车厢信息审核
             </template>
           </el-menu-item>
-          <el-menu-item index="compoInfoUser">
-            <template #default>
-              <el-icon><Cpu /></el-icon>
-              部件信息审核
-            </template>
-          </el-menu-item>
           <el-menu-item index="wrongCompUser">
             <template #default>
               <el-icon><warning /></el-icon>

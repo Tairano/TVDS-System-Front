@@ -5,7 +5,6 @@ import originalImage from '../views/public/admin/originalImage.vue'
 import carriageInformation from '../views/public/admin/carriageInformation.vue'
 import carriageInformationForUser from '../views/public/role/carriageInformationForUser.vue'
 import componentInformation from '../views/public/admin/componentInformation.vue'
-import componentInformationForUser from '../views/public/role/componentInformationForUser.vue'
 import wrongComponent from '../views/public/admin/wrongComponent.vue'
 import wrongComponentForUser from '../views/public/role/wrongComponentForUser.vue'
 import personalInformation from '../views/public/admin/personalInformation.vue'
@@ -46,11 +45,6 @@ const router = createRouter({
       component: componentInformation
     },
     {
-      path: '/compoInfoUser',
-      name: 'compoInfoUser',
-      component: componentInformationForUser
-    },
-    {
       path: '/wrongComp',
       name: 'wrongComp',
       component: wrongComponent
@@ -80,9 +74,14 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
   const token = sessionStorage.getItem('token')
+  const role = sessionStorage.getItem('role')
   if(token){
-    if(to.name === 'loginPage')
-      next('/')
+    if(to.name === 'loginPage'){
+      if(role == 'admin'){
+        next('/')
+      }
+      else next('/mission')
+    }
     else next()
   }
   else{
