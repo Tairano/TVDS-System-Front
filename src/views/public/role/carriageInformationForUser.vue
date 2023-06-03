@@ -70,7 +70,7 @@
     <imageListInformation :listUrl="listUrl">
     </imageListInformation>
   </el-dialog>
-  <el-dialog v-model="audit" style="width: 95%; height: auto">
+  <el-dialog v-model="audit" style="width: 80%; height: auto">
     <carriage-audit :ImageUrl="dialogImageUrl"
                     :MissionId="dialogMissionId"
                     :shows="closeAuditDialog">

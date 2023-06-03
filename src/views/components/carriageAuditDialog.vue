@@ -3,32 +3,28 @@
     <el-image  key="image" :src="getImg(ImageUrl)" lazy />
   </el-card>
   <el-descriptions
-      title="详细信息"
+      title="审查"
       direction="vertical"
       :column="1">
-    <el-descriptions-item label="item">
+    <el-descriptions-item>
       <el-table :data="data.affiliateParts">
-        <el-table-column prop="id" label="部件id" align="center" width="200"/>
-        <el-table-column prop="partName" label="部件类型" align="center" width="200">
+        <el-table-column prop="id" label="部件id" align="center" width="300"/>
+        <el-table-column prop="partName" label="部件类型" align="center" width="300">
           <template v-slot="scope">
             {{toChinese(scope.row.partName)}}
           </template>
         </el-table-column>
-        <el-table-column prop="partName" label="部件状态" align="center" width="200">
+        <el-table-column prop="partName" label="部件状态" align="center" width="300">
           <template v-slot="scope">
             {{statusToChinese(scope.row.status)}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="400">
           <template v-slot="scope">
             <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status">
               <el-radio label="正常" model-value="2"></el-radio>
               <el-radio label="异常" model-value="1"></el-radio>
             </el-radio-group>
-<!--            <el-select placeholder="请选择" v-model="scope.row.check">-->
-<!--              <el-option label="与结果一致" value="same" onselect=""></el-option>-->
-<!--              <el-option label="与结果不一致" value="abnormal"></el-option>-->
-<!--            </el-select>-->
           </template>
         </el-table-column>
       </el-table>
