@@ -32,9 +32,14 @@ export const submitAuditResult = (missionId: String, data: any) => {
     return postRequest(sendUrl(sa.verify, _ja.submitAudit) + missionId, data)
 }
 
+// 获取缺陷零件
+export const getDefectComp = (pg: string, data: any)=> {
+    return postRequest(sendUrl(sa.getPage, _ja.getDefectList) + pg, data)
+}
+
 // 通过部件获取车厢信息
-export const getCarriageByComp = (url: string)=> {
-    return sendUrl(sa.image,_ja.getImage) + url
+export const getCarriageByComp = (dbId: number)=> {
+    return postRequest(sendUrl(sa.getPage,_ja.getCarriageByComp) + dbId.toString(), null)
 }
 
 // 获取图片序列

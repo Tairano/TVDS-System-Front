@@ -31,8 +31,8 @@ export const JUNIOR_ADDRESS = {
     allMissions: 'getJobs',
     currentMission: 'missionDetail/',
     submitAudit: 'submit/',
-    getCarriageByComp: 'track',
-    getDefectList: 'defect'
+    getCarriageByComp: 'track/',
+    getDefectList: 'defect/'
 }
 
 // 状态值
