@@ -1,6 +1,6 @@
-import {postRequest, getRequest} from '@/tool/api/request'
+import {postRequest} from '@/tool/api/request'
 import {sendUrl} from '@/tool/Interface'
-import {SENIOR_ADDRESS as sa, JUNIOR_ADDRESS as _ja, JUNIOR_ADDRESS} from '@/tool/api/constants'
+import {SENIOR_ADDRESS as sa, JUNIOR_ADDRESS as _ja} from '@/tool/api/constants'
 
 // 获取页面
 export const getPage = (ja: string, pg: string, data: any)=> {
