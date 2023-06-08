@@ -5,7 +5,7 @@
         <el-card class="--tv-main-dark">
           <template #default>
             <div style="display: flex">
-              <img src="src/assets/logo.png" style="height: 20px">
+              <img src="src/assets/logo.png" style="height: 20px" alt="logo">
               <div>
                 <b>
                   TVDS异常检测系统
@@ -66,7 +66,7 @@
           <el-menu-item index="wrongCompUser">
             <template #default>
               <el-icon><warning /></el-icon>
-              问题部件审核
+              问题部件
             </template>
           </el-menu-item>
         </el-menu-item-group>

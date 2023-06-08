@@ -7,23 +7,29 @@
       direction="vertical"
       :column="1">
     <el-descriptions-item>
-      <el-table :data="data.affiliateParts">
+      <el-table :data="data.affiliateParts" style="width: 98%">
         <el-table-column prop="id" label="部件id" align="center" width="300"/>
-        <el-table-column prop="partName" label="部件类型" align="center" width="300">
+        <el-table-column prop="partName" label="部件类型" align="center">
           <template v-slot="scope">
             {{toChinese(scope.row.partName)}}
           </template>
         </el-table-column>
-        <el-table-column prop="partName" label="部件状态" align="center" width="300">
+        <el-table-column prop="partName" label="部件状态" align="center">
           <template v-slot="scope">
             {{statusToChinese(scope.row.status)}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="400">
+        <el-table-column label="部件详略图" align="center">
           <template v-slot="scope">
-            <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status">
-              <el-radio label="正常" model-value="2"></el-radio>
-              <el-radio label="异常" model-value="1"></el-radio>
+            <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template v-slot="scope">
+            <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status"
+                            :model-value="changeToString(scope.row.status)">
+              <el-radio label="正常"></el-radio>
+              <el-radio label="异常"></el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
@@ -41,18 +47,28 @@
       </div>
     </template>
   </el-descriptions>
+  <el-dialog v-model="dialog">
+    <ImageInformation :ImageUrl="dialogImageUrl"
+                      :ImageInfo="dialogImageInfo">
+    </ImageInformation>
+  </el-dialog>
 </template>
 
 <script>
 import {statusToChinese, toChinese} from "@/tool/utils";
 import {dwnImg, getCarriageAudit, getImg, getTmp, submitAuditResult} from "@/tool/api/methods";
+import ImageInformation from "@/views/components/compImageDialog.vue";
 import {ElMessage} from "element-plus";
 export default{
   name: "carriageAudit",
+  components: {ImageInformation},
   data(){
     return{
       downLoadName: '',
       imageData: null,
+      dialog: false,
+      dialogImageUrl: '',
+      dialogImageInfo: {},
       templateData: {
         bearing: [],
         spring: [],
@@ -142,6 +158,17 @@ export default{
             }
           }
       )
+    },
+    // 转换任务值
+    changeToString(s){
+      if(s === 2) return "正常"
+      else if(s === 1) return "异常"
+    },
+    // 查看大图
+    viewImage(url,info){
+      this.dialogImageUrl= url
+      this.dialogImageInfo= info
+      this.dialog= true
     }
   },
   mounted() {
@@ -160,7 +187,5 @@ export default{
 </script>
 
 <style scoped>
-carriage-information{
-  --el-dialog-width: 80%;
-}
+
 </style>
