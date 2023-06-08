@@ -43,7 +43,7 @@
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="auditDialog(scope.row.url,scope.row.missionId)" type="primary">审核</el-button>
+              <el-button @click="auditDialog(scope.row.url,scope.row.missionId);" type="primary" v-show="scope.row.status === 1">审核</el-button>
             </template>
           </el-table-column>
         </el-table>

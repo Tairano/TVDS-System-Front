@@ -31,6 +31,7 @@ export const JUNIOR_ADDRESS = {
     allMissions: 'getJobs',
     currentMission: 'missionDetail/',
     submitAudit: 'submit/',
+    submitJudge: 'submitConflictResolveResult/',
     getCarriageByComp: 'track/',
     getDefectList: 'defect/',
     getDefectListForAdmin: 'getConflictResolveView/'

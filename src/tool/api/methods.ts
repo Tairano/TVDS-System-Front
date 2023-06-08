@@ -32,6 +32,11 @@ export const submitAuditResult = (missionId: String, data: any) => {
     return postRequest(sendUrl(sa.verify, _ja.submitAudit) + missionId, data)
 }
 
+// 提交冲突裁决审核结果
+export const submitConflictResult = (compId: String, result: number) => {
+    return postRequest(sendUrl(sa.verify, _ja.submitJudge) + compId + '/' + result.toString(), null)
+}
+
 // 获取缺陷零件
 export const getDefectComp = (pg: string, data: any)=> {
     return postRequest(sendUrl(sa.getPage, _ja.getDefectList) + pg, data)

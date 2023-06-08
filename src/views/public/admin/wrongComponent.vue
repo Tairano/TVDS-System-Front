@@ -84,7 +84,8 @@
   </el-container>
   <el-dialog v-model="dialog">
     <ImageJudge :ImageUrl="dialogImageUrl"
-                      :ImageInfo="dialogImageInfo">
+                :ImageInfo="dialogImageInfo"
+                :shows="closeDialog">
     </ImageJudge>
   </el-dialog>
   <el-dialog v-model="carriageDialog" style="width: 95%; height: auto">
@@ -259,6 +260,10 @@ export default {
     // 按钮状态重载
     buttonReload(status,target){
       return status === target;
+    },
+    // 关闭审核栏
+    closeDialog(){
+      this.dialog = false
     }
   },
   mounted() {
