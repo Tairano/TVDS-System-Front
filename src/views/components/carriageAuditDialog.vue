@@ -26,10 +26,9 @@
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template v-slot="scope">
-            <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status"
-                            :model-value="changeToString(scope.row.status)">
-              <el-radio label="正常"></el-radio>
-              <el-radio label="异常"></el-radio>
+            <el-radio-group v-model="form.results[getIndexByDbId(scope.row.dbId)].status">
+              <el-radio label="正常" :v-model="changeToString(scope.row.status)"></el-radio>
+              <el-radio label="异常" :v-model="changeToString(scope.row.status)"></el-radio>
             </el-radio-group>
           </template>
         </el-table-column>
@@ -154,7 +153,7 @@ export default{
             this.data = response
             this.form.results = []
             for(let i in this.data.affiliateParts){
-              this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: 0})
+              this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: this.changeToString(this.data.affiliateParts[i].status)})
             }
           }
       )
