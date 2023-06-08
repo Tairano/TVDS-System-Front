@@ -37,6 +37,11 @@ export const getDefectComp = (pg: string, data: any)=> {
     return postRequest(sendUrl(sa.getPage, _ja.getDefectList) + pg, data)
 }
 
+// 获取缺陷零件（管理员版）
+export const getDefectCompForAdmin = (pg: string, data: any)=> {
+    return postRequest(sendUrl(sa.verify, _ja.getDefectListForAdmin) + pg, data)
+}
+
 // 通过部件获取车厢信息
 export const getCarriageByComp = (dbId: number)=> {
     return postRequest(sendUrl(sa.getPage,_ja.getCarriageByComp) + dbId.toString(), null)
