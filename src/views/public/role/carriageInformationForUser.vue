@@ -43,7 +43,7 @@
           <el-table-column prop="model" label="型号" align="center"/>
           <el-table-column fixed="right" label="操作" align="center">
             <template v-slot="scope">
-              <el-button @click="auditDialog(scope.row.url,scope.row.missionId);" type="primary" v-show="scope.row.status === 1">审核</el-button>
+              <el-button @click="auditDialog(scope.row.alignedUrl,scope.row.missionId);" type="primary" v-show="scope.row.status === 1">审核</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -91,6 +91,7 @@ export default {
   components: {CarriageAudit, ImageListInformation, CarriageInformation},
   data() {
     return{
+      dataIndexUrl: null,
       // 引入常量
       CARRIAGE_STATUS,
       COMPONENT_STATUS,
@@ -211,13 +212,21 @@ export default {
     },
     // 唤起审核栏
     auditDialog(url,missionId){
+      this.dataIndexUrl = url
       this.dialogImageUrl= url
       this.dialogMissionId= missionId
       this.audit = true
     },
     // 关闭审核栏
-    closeAuditDialog(){
+    closeAuditDialog(response){
       this.audit = false
+      if(response === 1){
+        for(let i in this.tableData){
+          if(this.tableData[i].url === this.dataIndexUrl){
+            this.tableData[i].status = 0
+          }
+        }
+      }
     }
   },
   created() {
