@@ -22,6 +22,11 @@ export const getCarriageAudit = (missionId: number)=> {
     return postRequest(sendUrl(sa.verify, _ja.currentMission) + missionId, null)
 }
 
+// 获取车厢审核信息
+export const getMissionStatistic = ()=> {
+    return postRequest(sendUrl(sa.statistic, _ja.user), null)
+}
+
 // 获取当前用户任务视图
 export const getAllMissions = (pg: string, data: any)=> {
     return postRequest(sendUrl(sa.verify, _ja.allMissions) + pg, data)

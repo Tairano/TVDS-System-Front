@@ -11,7 +11,8 @@ export const SENIOR_ADDRESS = {
     image : 'blob',
     user : 'user',
     developer : 'test',
-    verify : 'verify'
+    verify : 'verify',
+    statistic : 'statistics'
 }
 
 // 二级地址
@@ -35,7 +36,8 @@ export const JUNIOR_ADDRESS = {
     submitJudge: 'submitConflictResolveResult/',
     getCarriageByComp: 'track/',
     getDefectList: 'defect/',
-    getDefectListForAdmin: 'getConflictResolveView/'
+    getDefectListForAdmin: 'getConflictResolveView/',
+    user: 'user'
 }
 
 // 状态值
