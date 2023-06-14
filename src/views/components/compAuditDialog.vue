@@ -1,6 +1,6 @@
 <template>
-  <el-card style="text-align: center; background-color: black;margin-bottom: 10px">
-    <el-image  key="image" :src="getImg(ImageUrl)" lazy />
+  <el-card style="max-height:100vh; text-align: center; background-color: black; margin-bottom: 10px">
+    <el-image  key="image" :src="getImg(ImageUrl)" lazy style="height: 100%; width: auto"/>
   </el-card>
   <el-descriptions
       title="详细信息"
@@ -39,6 +39,49 @@
     </el-descriptions-item>
     <el-descriptions-item label="部件类型">{{toChinese(ImageInfo.partName)}}</el-descriptions-item>
   </el-descriptions>
+  <el-descriptions
+      title="审核"
+      direction="vertical"
+      :column="3"
+      border>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          机器初审结果
+        </div>
+      </template>
+      <el-button text="text" type="success" plain v-show="ImageInfo.status === 2">正常</el-button>
+      <el-button text="text" type="danger" plain v-show="ImageInfo.status === 1">异常</el-button>
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          状态
+        </div>
+      </template>
+      <el-radio-group v-model="radio">
+        <el-radio :label="2">正常</el-radio>
+        <el-radio :label="1">异常</el-radio>
+      </el-radio-group>
+    </el-descriptions-item>
+    <el-descriptions-item>
+      <template #label>
+        <div class="cell-item">
+          备注
+        </div>
+      </template>
+      <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="comment">
+      </el-input>
+    </el-descriptions-item>
+  </el-descriptions>
+  <div style="text-align: right; width: 100%">
+      <el-button @click="onSubmit" type="primary">提交审核</el-button>
+      <el-button @click="closeDialog">取消</el-button>
+  </div>
 </template>
 
 <script>
@@ -46,16 +89,20 @@ import {toChinese} from "@/tool/utils";
 import {dwnImg, getImg} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 export default{
-  name: "imageInformation",
+  name: "imageAudit",
   data(){
     return{
       downLoadName: '',
       imageData: null,
+      radio: 2,
+      comment: null
     }
   },
   props: {
     ImageUrl: String,
-    ImageInfo: Object
+    ImageInfo: Object,
+    Func: Function,
+    CloseDialog: Function
   },
   methods:{
     toChinese,
@@ -78,6 +125,18 @@ export default{
         type: 'alert',
         message: '图片名称或地址加载失败，请检查系统问题，或手动设置文件名称'
       })
+    },
+    onSubmit(){
+      let result = {dbId: this.ImageInfo.dbId, status: this.radio, comment: this.comment}
+      this.Func(result)
+      this.radio = 2
+      this.comment = null
+      this.CloseDialog()
+    },
+    closeDialog(){
+      this.radio = 2
+      this.comment = null
+      this.CloseDialog()
     }
   },
   mounted() {

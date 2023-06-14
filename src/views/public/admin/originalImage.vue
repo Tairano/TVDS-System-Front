@@ -5,7 +5,7 @@
         <el-button @click="treeQuery" type="primary">搜索</el-button>
         <el-button @click="clearTree" >清空</el-button>
       </el-card>
-      <el-card style="height: 87%; margin: 17px 0 0 0">
+      <el-card style="height: 87%; margin: 17px 0 0 0; overflow: auto">
         <el-tree
             :data="treeData"
             show-checkbox
@@ -17,61 +17,40 @@
     </el-aside>
     <el-container class="--tv-page-table">
       <el-header class="--tv-page-table-select">
-        <el-date-picker style="max-width: 300px"
-            v-model="dateInfo"
-            type="daterange"
-            value-format="YYYY-MM-DD"
-            unlink-panels
-            range-separator="-"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :shortcuts="dateShortCuts"
-        />
-        <div style="width: 100px"></div>
+        <el-input v-model="queryData.inspectionSeq" placeholder="请输入" style="width: 300px">
+          <template #prepend>按过检号搜素：</template>
+        </el-input>
+        <div style="width: 20px"></div>
         <el-button style="width: 100px" @click="conditionalQuery" type="primary">搜索</el-button>
       </el-header>
       <el-main>
         <el-table :data="tableData" border stripe style="width: 98%;height: 100%">
-          <el-table-column prop="id" label="图片ID" width="200%" align="center"/>
-          <el-table-column prop="inspectionSeq" label="过检号" align="center"/>
-          <el-table-column prop="cameraNo" label="机位" align="center"/>
-          <el-table-column prop="carriageNo" label="车厢号" align="center"/>
-          <el-table-column prop="status" label="状态" align="center">
+          <el-table-column label="图片ID" width="200%" align="center">
             <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.un_detect)">未检测</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.detect_ing)">检测中</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="success" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.common)">正常</el-button>
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)" text="text" type="danger" plain v-show="buttonReload(scope.row.status,COMPONENT_STATUS.error)">异常</el-button>
+              {{scope.row.createTime.split('T')[0] + '-' + scope.row.inspectionSeqDay + '-' +scope.row.id}}
             </template>
           </el-table-column>
-          <el-table-column label="类型" align="center">
+          <el-table-column prop="createTime" label="过检日期" width="200%" align="center"/>
+          <el-table-column prop="inspectionSeqDay" label="过检号" width="200%" align="center"/>
+          <el-table-column prop="cameraNumber" label="机位" align="center"/>
+          <el-table-column prop="carriageNumber" label="车厢号" align="center"/>
+          <el-table-column label="查看图片图" align="center">
             <template v-slot="scope">
-              {{toChinese(scope.row.partName)}}
-            </template>
-          </el-table-column>>
-          <el-table-column label="详略图" align="center">
-            <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" align="center">
-            <template v-slot="scope">
-              <el-button @click="scope.row.status = 3;detect(scope.row)" type="primary" v-show="buttonReload(scope.row.status,0)">检测</el-button>
-              <el-button type="primary" plain disabled v-show="buttonReload(scope.row.status,3)">检测中</el-button>
+              <el-button @click="viewImage(scope.row.localUrl,scope.row)">查看大图</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-main>
       <el-footer class="--tv-page-table-select">
-          <el-pagination
-              v-model:current-page="currentPage"
-              :page-size="1"
-              :page-count="totalPage"
-              :background="true"
-              layout="total, prev, pager, next"
-              :total="totalPage"
-              @current-change="getPageByCode"
-          />
+        <el-pagination
+            v-model:current-page="currentPage"
+            :page-size="1"
+            :page-count="totalPage"
+            :background="true"
+            layout="total, prev, pager, next"
+            :total="totalPage"
+            @current-change="getPageByCode"
+        />
       </el-footer>
     </el-container>
   </el-container>
@@ -83,22 +62,17 @@
 </template>
 
 <script>
-import {getPage, getTree, execCom} from "@/tool/api/methods";
+import {getPage, getTree} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {JUNIOR_ADDRESS as ja} from "@/tool/api/constants";
-import {CARRIAGE_STATUS, COMPONENT_STATUS} from "@/tool/api/constants";
-import ImageInformation from "@/views/components/imageInformation.vue";
-import {ElMessage} from "element-plus";
-const address = ja.compoInfo;
+import ImageInformation from "@/views/components/compImageDialog.vue";
+const address = ja.orgImage;
 
 export default {
-  name: "compoInfo",
+  name: "orgImage",
   components: {ImageInformation},
   data() {
     return{
-      // 引入常量
-      CARRIAGE_STATUS,
-      COMPONENT_STATUS,
       // 树结构
       treeData: null,
       // 表格结构
@@ -121,8 +95,9 @@ export default {
       // 查询条件类
       queryData : {
         treeList: [],
-        dateBegin: Date,
-        dateEnd: Date
+        inspectionSeq: '',
+        carriageId: '',
+        imageId: ''
       },
     }
   },
@@ -162,13 +137,13 @@ export default {
     // 树条件筛选器
     treeQuery(){
       // 清空子界面的其他查询条件。树优先级更高，所以只有树执行该操作
-      this.dateInfo = null
-      this.queryData.dateBegin = null
-      this.queryData.dateEnd = null
+      this.queryData.carriageId = ''
+      this.queryData.imageId = ''
+      this.queryData.inspectionSeq = ''
       // 加载树条件
       this.queryData.treeList = []
       for(let i of this.$refs.tree.getCheckedKeys()){
-        if(i.split('_')[2] != null){
+        if(i.length === 8){
           this.queryData.treeList.push(i)
         }
       }
@@ -184,8 +159,6 @@ export default {
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
-      this.queryData.dateBegin = this.dateInfo[0].toString()+'T00:00:00'
-      this.queryData.dateEnd = this.dateInfo[1].toString()+'T23:59:59'
       getPage(address,sendPage(1),this.queryData).then(
           response=> {
             this.tableData = response.page
@@ -196,27 +169,10 @@ export default {
     },
     // 查看大图
     viewImage(url,info){
+      console.log(url,info)
       this.dialogImageUrl= url
       this.dialogImageInfo= info
       this.dialog= true
-    },
-    // 检测
-    detect(row){
-      execCom('defect',row.dbId).then(
-          response=>{
-            const newData = response.data
-            for(var i in this.tableData){
-              if(this.tableData[i].dbId === newData.dbId){
-                this.tableData[i] = newData
-                break
-              }
-            }
-            ElMessage({
-              type: 'success',
-              message: response.message
-            })
-          }
-      )
     },
     /*
      * 数据处理功能
@@ -226,7 +182,13 @@ export default {
     treeReload(tree){
       if(tree != null){
         for(let i of tree){
-          i.label += '型'
+          i.label += '年'
+          for(let j of i.children){
+            j.label += '月'
+            for(let k of j.children){
+              k.label += '日'
+            }
+          }
         }
       }
       return tree

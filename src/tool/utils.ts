@@ -68,6 +68,15 @@ export function toChinese(val: string){
     return val
 }
 
+// 部件状态转中问
+export function statusToChinese(val: number){
+    if(val == -1) return '任意'
+    else if(val == 0) return '未检测'
+    else if(val == 1) return '异常'
+    else if(val == 2) return '正常'
+    else return '未知情况'
+}
+
 // 方框动画以及放大器
 export function createBox(x: number, y: number) {
     // 创建一个 <div> 元素

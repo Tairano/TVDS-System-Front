@@ -1,6 +1,6 @@
 <template>
-  <el-card style="text-align: center; background-color: black;margin-bottom: 10px">
-    <el-image  key="image" :src="getImg(ImageUrl)" lazy />
+  <el-card style="max-height:100vh; text-align: center; background-color: black; margin-bottom: 10px">
+    <el-image  key="image" :src="getImg(ImageUrl)" lazy style="height: 100%; width: auto"/>
   </el-card>
   <el-descriptions
       title="详细信息"
@@ -8,7 +8,6 @@
       :column="3"
       border
   >
-
     <template #extra>
       <div style="display: flex">
         <div style="width: 10vw; text-align: center; margin-top: 7px">
@@ -18,46 +17,40 @@
         <el-button @click="downloadImg" type="primary">下载图片到本地</el-button>
       </div>
     </template>
-    <el-descriptions-item label="过检日期">{{ImageInfo.createTime}}</el-descriptions-item>
+    <el-descriptions-item label="拍摄日期">{{ImageInfo.createTime}}</el-descriptions-item>
     <el-descriptions-item label="上传时间">{{ImageInfo.updateTime}}</el-descriptions-item>
-    <el-descriptions-item label="检测日期">{{ImageInfo.compositeTime}}</el-descriptions-item>
+    <el-descriptions-item label="检测日期">{{ImageInfo.checkTime}}</el-descriptions-item>
+  </el-descriptions>
+  <el-descriptions
+      direction="vertical"
+      :column="4"
+      border
+  >
+    <el-descriptions-item label="所在车厢ID">{{ImageInfo.updateTime}}</el-descriptions-item>
     <el-descriptions-item label="图片编号">{{ImageInfo.id}}</el-descriptions-item>
     <el-descriptions-item>
       <template #label>
         <div class="cell-item">
-          型号
+          图片分类
         </div>
       </template>
-      <el-tag size="small" type="danger">{{ImageInfo.model}}</el-tag>
+      <el-tag size="small">{{ImageInfo.model}}</el-tag>
+      <el-tag size="small">{{ImageInfo.partName}}</el-tag>
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        <div class="cell-item">
-          部件类型
-        </div>
-      </template>
-      <el-tag size="small" type="success">弹簧</el-tag>
-      <el-tag size="small" type="success">轴承</el-tag>
-      <el-tag size="small" type="success">车轮</el-tag>
-    </el-descriptions-item>
+    <el-descriptions-item label="部件类型">{{toChinese(ImageInfo.partName)}}</el-descriptions-item>
   </el-descriptions>
 </template>
 
 <script>
 import {toChinese} from "@/tool/utils";
-import {dwnImg, getImg, getTmp} from "@/tool/api/methods";
+import {dwnImg, getImg} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 export default{
-  name: "carriageInformation",
+  name: "imageInformation",
   data(){
     return{
       downLoadName: '',
       imageData: null,
-      templateData: {
-        bearing: [],
-        spring: [],
-        wheel: []
-      }
     }
   },
   props: {
@@ -70,20 +63,8 @@ export default{
     downloadImg(){
       dwnImg(this.ImageUrl,this.downLoadName)
     },
-    // 请求模板数据
-    getTemplate(){
-      getTmp().then(
-          response=> {
-            this.templateData.spring = response.spring
-            this.templateData.bearing = response.bearing
-            this.templateData.wheel = response.wheel
-          }
-      )
-    },
     // 图片名称验证功能
     detectImageName(){
-      console.log(this.ImageUrl,this.ImageInfo)
-      this.getTemplate()
       if(this.ImageUrl != null){
         if(this.ImageUrl.split('/').pop() != null){
           if(this.ImageUrl.split('/').pop().split('.')[0] != null){
@@ -111,7 +92,6 @@ export default{
 </script>
 
 <style scoped>
-carriage-information{
-  --el-dialog-width: 80%;
-}
+
 </style>
+

@@ -6,4 +6,4 @@ export const HostPort = '8080'
 export const PAGE_SIZE = 10
 
 // 设置是否显示开发者模式
-export const IS_DEVELOPER_MODEL = true
+export const IS_DEVELOPER_MODEL = false
