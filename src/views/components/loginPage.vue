@@ -4,7 +4,7 @@
              :close-on-press-escape="false"
              :show-close="false">
     <div class="bg-login" style="text-align: center">
-      <img src="src/assets/images/locomotive.png" style="width: 200px"/>
+      <img src="src/assets/images/locomotive.svg" style="width: 200px"/>
       <el-row type="flex" class="row-bg row-two" justify="center" align="middle">
         <el-col :span="6"></el-col>
         <el-col :span="10">
