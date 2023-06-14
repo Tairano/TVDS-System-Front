@@ -80,7 +80,7 @@
   </el-descriptions>
   <div style="text-align: right; width: 100%">
       <el-button @click="onSubmit" type="primary">提交审核</el-button>
-      <el-button @click="this.shows(0)">取消</el-button>
+      <el-button @click="closeDialog">取消</el-button>
   </div>
 </template>
 
@@ -101,7 +101,8 @@ export default{
   props: {
     ImageUrl: String,
     ImageInfo: Object,
-    Func: function (){}
+    Func: Function,
+    CloseDialog: Function
   },
   methods:{
     toChinese,
@@ -124,6 +125,18 @@ export default{
         type: 'alert',
         message: '图片名称或地址加载失败，请检查系统问题，或手动设置文件名称'
       })
+    },
+    onSubmit(){
+      let result = {dbId: this.ImageInfo.dbId, status: this.radio, comment: this.comment}
+      this.Func(result)
+      this.radio = 2
+      this.comment = null
+      this.CloseDialog()
+    },
+    closeDialog(){
+      this.radio = 2
+      this.comment = null
+      this.CloseDialog()
     }
   },
   mounted() {

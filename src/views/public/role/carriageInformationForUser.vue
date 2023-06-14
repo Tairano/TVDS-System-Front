@@ -109,7 +109,7 @@ export default {
       dateShortCuts: DataShortCups,
       // 选中查看的图片url以及信息
       dialogImageUrl: '',
-      dialogMissionId: 0,
+      dialogMissionId: null,
       dialogImageInfo: {},
       // 选中图部件序列url以及信息
       listUrl: '',
@@ -222,7 +222,7 @@ export default {
       this.audit = false
       if(response === 1){
         for(let i in this.tableData){
-          if(this.tableData[i].url === this.dataIndexUrl){
+          if(this.tableData[i].alignedUrl === this.dataIndexUrl){
             this.tableData[i].status = 0
           }
         }

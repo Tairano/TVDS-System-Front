@@ -24,8 +24,8 @@
             </el-table-column>
             <el-table-column prop="partName" label="审核情况" align="center">
               <template v-slot="scope">
-                <el-button text="text" type="success" plain v-show="scope.row.status === 2">正常</el-button>
-                <el-button text="text" type="danger" plain v-show="scope.row.status === 1">异常</el-button>
+                <el-button text="text" type="success"  plain v-show="scope.row.auditStatus === 2">已审核</el-button>
+                <el-button text="text" plain v-show="scope.row.auditStatus === 1">未修改</el-button>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -51,8 +51,8 @@
         </el-table-column>
         <el-table-column prop="partName" label="审核情况" align="center">
           <template v-slot="scope">
-            <el-button text="text" type="success" plain v-show="scope.row.status === 2">正常</el-button>
-            <el-button text="text" type="danger" plain v-show="scope.row.status === 1">异常</el-button>
+            <el-button text="text" type="success" plain v-show="scope.row.auditStatus === 2">已审核</el-button>
+            <el-button text="text" plain v-show="scope.row.auditStatus === 1">未修改</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -61,9 +61,6 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-descriptions-item>
-    <el-descriptions-item label="备注">
-      <el-input type="textarea" v-model="form.comment"></el-input>
     </el-descriptions-item>
   </el-descriptions>
   <el-descriptions>
@@ -77,13 +74,14 @@
   <el-dialog v-model="dialog">
     <image-audit :ImageUrl="dialogImageUrl"
                  :ImageInfo="dialogImageInfo"
-                 :Func="sd">
+                 :Func="insertAuditResult"
+                 :CloseDialog="closeDialog">
     </image-audit>
   </el-dialog>
 </template>
 
 <script>
-import {statusToChinese, toChinese} from "@/tool/utils";
+import {toChinese} from "@/tool/utils";
 import {dwnImg, getCarriageAudit, getImg, getTmp, submitAuditResult} from "@/tool/api/methods";
 import {ElMessage} from "element-plus";
 import ImageAudit from "@/views/components/compAuditDialog.vue";
@@ -103,24 +101,20 @@ export default{
         wheel: []
       },
       form: {
-        comment: '',
         results: []
       },
       normalForm: [],
       abnormalForm: [],
-      data: {
-        affiliateParts: []
-      }
+      data: []
     }
   },
   props: {
     ImageUrl: String,
-    MissionId: Number,
-    shows: function (){}
+    MissionId: String,
+    shows: Function
   },
   methods:{
     toChinese,
-    statusToChinese,
     getImg,
     getCarriageAudit,
     downloadImg(){
@@ -138,10 +132,6 @@ export default{
     },
     // 提交审核
     onSubmit(){
-      for(let i in this.form.results) {
-        if(this.form.results[i].status === '正常') this.form.results[i].status = 2
-        else if(this.form.results[i].status === '异常') this.form.results[i].status = 1
-      }
       submitAuditResult(this.MissionId, this.form).then(
           response => {
             this.shows(1)
@@ -151,14 +141,6 @@ export default{
             })
           }
       )
-    },
-    // 从 dbId 获取下标
-    getIndexByDbId(dbId){
-      for(let i in this.form.results){
-        if(this.form.results[i].partId === dbId){
-          return i
-        }
-      }
     },
     // 图片名称验证功能
     detectImageName(){
@@ -184,25 +166,49 @@ export default{
             this.data = response
             this.form.results = []
             for(let i in this.data.affiliateParts){
+              this.data.affiliateParts[i].auditStatus = 1
               if(this.data.affiliateParts[i].status === 2){
                 this.normalForm.push(this.data.affiliateParts[i])
+                this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: 2, comment: null})
               }
-              else this.abnormalForm.push(this.data.affiliateParts[i])
-              this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: this.changeToString(this.data.affiliateParts[i].status), comment: null})
+              else{
+                this.abnormalForm.push(this.data.affiliateParts[i])
+                this.form.results.push({partId: this.data.affiliateParts[i].dbId, status: 1, comment: null})
+              }
             }
           }
       )
-    },
-    // 转换任务值
-    changeToString(s){
-      if(s === 2) return "正常"
-      else if(s === 1) return "异常"
     },
     // 查看大图
     viewImage(url,info){
       this.dialogImageUrl= url
       this.dialogImageInfo= info
       this.dialog= true
+    },
+    // 关闭界面
+    closeDialog(){
+      this.dialog = false
+    },
+    // 传入审核结果
+    insertAuditResult(result){
+      for(let i in this.form.results){
+        if(this.form.results[i].partId === result.dbId){
+          this.form.results[i].status = result.status
+          this.form.results[i].comment = result.comment
+        }
+      }
+      for(let i in this.normalForm){
+        if(this.normalForm[i].dbId === result.dbId)
+          this.normalForm[i].auditStatus = 2
+      }
+      for(let i in this.abnormalForm){
+        if(this.abnormalForm[i].dbId === result.dbId)
+          this.abnormalForm[i].auditStatus = 2
+      }
+      ElMessage({
+        type: 'success',
+        message: '已保存部件审核结果'
+      })
     }
   },
   mounted() {
