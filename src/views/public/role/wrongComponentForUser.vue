@@ -35,9 +35,9 @@
               {{toChinese(scope.row.partName)}}
             </template>
           </el-table-column>>
-          <el-table-column label="详略图" align="center">
+          <el-table-column label="初审" align="center">
             <template v-slot="scope">
-              <el-button @click="viewImage(scope.row.imageUrl,scope.row)">查看大图</el-button>
+              <el-button @click="viewImage(scope.row.imageUrl,scope.row)">审核</el-button>
             </template>
           </el-table-column>
           <el-table-column label="父级车厢" align="center">
@@ -61,28 +61,30 @@
     </el-container>
   </el-container>
   <el-dialog v-model="dialog">
-    <ImageInformation :ImageUrl="dialogImageUrl"
-                      :ImageInfo="dialogImageInfo">
-    </ImageInformation>
+    <image-audit :ImageUrl="dialogImageUrl"
+                 :ImageInfo="dialogImageInfo"
+                 :Func="uploadAuditResult"
+                 :CloseDialog="closeDialog">
+    </image-audit>
   </el-dialog>
   <el-dialog v-model="carriageDialog" style="width: 95%; height: auto">
     <carriage-information :ImageUrl="dialogImageUrl"
-                         :ImageInfo="dialogImageInfo">
+                          :ImageInfo="dialogImageInfo">
     </carriage-information>
   </el-dialog>
 </template>
 
 <script>
-import {getDefectComp, execCom, getCarriageByComp} from "@/tool/api/methods";
+import {getDefectComp, execCom, getCarriageByComp, submitSingleAuditResult} from "@/tool/api/methods";
 import {sendPage, toChinese, DataShortCups} from "@/tool/utils";
 import {CARRIAGE_STATUS, COMPONENT_STATUS, COMPONENT_STATUS_IN_CHECK} from "@/tool/api/constants";
 import CarriageInformation from "@/views/components/carriageImageDialog.vue";
-import ImageInformation from "@/views/components/compImageDialog.vue";
+import ImageAudit from "@/views/components/compAuditDialog.vue";
 import {ElMessage} from "element-plus";
 
 export default {
   name: "wrongComponentUser",
-  components: {CarriageInformation, ImageInformation},
+  components: {CarriageInformation, ImageAudit},
   data() {
     return{
       // 引入常量
@@ -166,6 +168,18 @@ export default {
           }
       )
     },
+    // 上传审核结果
+    uploadAuditResult(result){
+      let results = {partId: result.dbId, status: result.status, comment: result.comment}
+      submitSingleAuditResult(results).then(
+          response => {
+            ElMessage({
+              type: 'success',
+              message: '已提交结果。'
+            })
+          }
+      )
+    },
     // 横栏筛选器
     conditionalQuery(){
       // 重设查询条件
@@ -189,6 +203,7 @@ export default {
     viewImage(url,info){
       this.dialogImageUrl= url
       this.dialogImageInfo= info
+      this.dialogImageInfo.status = 1
       this.dialog= true
     },
     // 获取父级车厢
@@ -218,6 +233,10 @@ export default {
             })
           }
       )
+    },
+    // 关闭界面
+    closeDialog(){
+      this.dialog = false
     },
     /*
      * 数据处理功能
